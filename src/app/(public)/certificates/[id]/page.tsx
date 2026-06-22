@@ -4,6 +4,12 @@ import { ArrowLeft, ExternalLink, Award } from "lucide-react";
 import { getCertificate } from "@/services/backendApi";
 import PDFPreview from "@/components/PDFPreview";
 
+export async function generateStaticParams() {
+    // Return empty array to skip static generation for this dynamic route
+    // This allows the route to work with output: "export" without pre-generating all pages
+    return [];
+}
+
 export default async function CertificateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
     let cert: any;
