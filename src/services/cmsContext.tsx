@@ -36,6 +36,11 @@ import {
 
 const BACKEND_URL = BACKEND_API_URL.replace(/\/api\/?$/, "");
 
+const formatImageUrl = (url?: string | null): string => {
+  if (!url) return "";
+  return url.startsWith('http') ? url : `${BACKEND_URL}${url}`;
+};
+
 // Types definition
 export interface Project {
   id: string;
@@ -274,8 +279,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
             description: proj.description,
             skillIds: (proj.skillIds ?? []).map(String),
             skillNames: (proj.skillNames ?? []),
-            image: proj.image,
-            images: proj.images ?? [],
+            image: formatImageUrl(proj.image),
+            images: (proj.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
             longDescription: proj.longDescription ?? proj.long_description,
             projectRole: proj.projectRole ?? proj.project_role,
             problem: proj.problem,
@@ -353,8 +358,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
             showGitHubActivity: Boolean(settingsData.showGitHubActivity ?? settingsData.show_github_activity ?? settings.showGitHubActivity),
             bio: settingsData.bio ?? settings.bio,
             aboutMe: settingsData.aboutMe ?? settingsData.about_me ?? settings.aboutMe,
-            profileImage: settingsData.profileImage ?? settings.profileImage,
-            resumeUrl: settingsData.resumeUrl ?? settings.resumeUrl,
+            profileImage: settingsData.profileImage ? (settingsData.profileImage.startsWith('http') ? settingsData.profileImage : `${BACKEND_URL}${settingsData.profileImage}`) : settings.profileImage,
+            resumeUrl: settingsData.resumeUrl ? (settingsData.resumeUrl.startsWith('http') ? settingsData.resumeUrl : `${BACKEND_URL}${settingsData.resumeUrl}`) : settings.resumeUrl,
           };
           setSettings(normalized);
           persistSettings(normalized);
@@ -415,8 +420,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
             description: created.description,
             skillIds: (created.skillIds ?? []).map(String),
             skillNames: (created.skillNames ?? []),
-            image: created.image,
-            images: created.images ?? [],
+            image: formatImageUrl(created.image),
+            images: (created.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
             longDescription: created.long_description ?? created.longDescription,
             projectRole: created.projectRole ?? created.project_role,
             problem: created.problem,
@@ -474,8 +479,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           description: created.description,
           skillIds: (created.skillIds ?? []).map(String),
           skillNames: (created.skillNames ?? []),
-          image: created.image,
-          images: created.images ?? [],
+          image: formatImageUrl(created.image),
+          images: (created.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
           longDescription: created.long_description ?? created.longDescription,
           projectRole: created.projectRole ?? created.project_role,
           problem: created.problem,
@@ -540,8 +545,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
             description: updatedProject.description,
             skillIds: (updatedProject.skillIds ?? []).map(String),
             skillNames: (updatedProject.skillNames ?? []),
-            image: updatedProject.image,
-            images: updatedProject.images ?? [],
+            image: formatImageUrl(updatedProject.image),
+            images: (updatedProject.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
             longDescription: updatedProject.long_description ?? updatedProject.longDescription,
             projectRole: updatedProject.projectRole ?? updatedProject.project_role,
             problem: updatedProject.problem,
@@ -588,8 +593,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           description: updatedProject.description,
           skillIds: (updatedProject.skillIds ?? []).map(String),
           skillNames: (updatedProject.skillNames ?? []),
-          image: updatedProject.image,
-          images: updatedProject.images ?? [],
+          image: formatImageUrl(updatedProject.image),
+          images: (updatedProject.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
           longDescription: updatedProject.long_description ?? updatedProject.longDescription,
           projectRole: updatedProject.projectRole ?? updatedProject.project_role,
           problem: updatedProject.problem,
@@ -1004,7 +1009,17 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateSettings = async (s: Partial<Settings>, skipApi = false) => {
-    const updated = { ...settings, ...s };
+    // Format URLs if they are relative
+    const formattedProfileImage = s.profileImage ? (s.profileImage.startsWith('http') ? s.profileImage : `${BACKEND_URL}${s.profileImage}`) : s.profileImage;
+    const formattedResumeUrl = s.resumeUrl ? (s.resumeUrl.startsWith('http') ? s.resumeUrl : `${BACKEND_URL}${s.resumeUrl}`) : s.resumeUrl;
+
+    const updated = { 
+      ...settings, 
+      ...s,
+      ...(s.profileImage !== undefined && { profileImage: formattedProfileImage }),
+      ...(s.resumeUrl !== undefined && { resumeUrl: formattedResumeUrl }),
+    };
+    
     setSettings(updated);
     localStorage.setItem("deva_settings", JSON.stringify(updated));
 
