@@ -1,13 +1,25 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink, Award } from "lucide-react";
-import { getCertificate } from "@/services/backendApi";
+import { getCertificate, getCertificates } from "@/services/backendApi";
 import PDFPreview from "@/components/PDFPreview";
 
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/$/, "") || "http://localhost:8000/api";
+
 export async function generateStaticParams() {
-    // Return empty array to skip static generation for this dynamic route
-    // This allows the route to work with output: "export" without pre-generating all pages
-    return [];
+    try {
+        const response = await fetch(`${BACKEND_API_URL}/certificates`, {
+            next: { revalidate: 60 },
+        });
+        if (!response.ok) return [];
+        const json = await response.json();
+        const certificates = json.data ?? json;
+        return (certificates ?? []).map((cert: any) => ({
+            id: String(cert.id),
+        }));
+    } catch {
+        return [];
+    }
 }
 
 export default async function CertificateDetailPage({ params }: { params: Promise<{ id: string }> }) {

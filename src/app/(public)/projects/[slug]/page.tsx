@@ -26,9 +26,19 @@ function formatDate(value?: string | null) {
 }
 
 export async function generateStaticParams() {
-    // Return empty array to skip static generation for this dynamic route
-    // This allows the route to work with output: "export" without pre-generating all pages
-    return [];
+    try {
+        const response = await fetch(`${BACKEND_API_URL}/projects`, {
+            next: { revalidate: 60 },
+        });
+        if (!response.ok) return [];
+        const json = await response.json();
+        const projects = json.data ?? json;
+        return (projects ?? []).map((project: any) => ({
+            slug: project.slug,
+        }));
+    } catch {
+        return [];
+    }
 }
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
