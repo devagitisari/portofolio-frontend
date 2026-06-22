@@ -25,6 +25,12 @@ function formatDate(value?: string | null) {
     return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
 }
 
+export async function generateStaticParams() {
+    // Return empty array to skip static generation for this dynamic route
+    // This allows the route to work with output: "export" without pre-generating all pages
+    return [];
+}
+
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     let project: any;
     const resolvedParams = await params;
