@@ -428,8 +428,9 @@ export default function AdminSettingsPage() {
                 <div className="flex-1 w-full space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Full Name</label>
+                      <label htmlFor="settings_name" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Full Name</label>
                       <input
+                        id="settings_name"
                         required
                         className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                         type="text"
@@ -438,8 +439,9 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Title</label>
+                      <label htmlFor="settings_title" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Title</label>
                       <input
+                        id="settings_title"
                         required
                         className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                         type="text"
@@ -450,8 +452,9 @@ export default function AdminSettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold font-sans">Professional Bio</label>
+                    <label htmlFor="settings_bio" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold font-sans">Professional Bio</label>
                     <textarea
+                      id="settings_bio"
                       required
                       className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors resize-none leading-relaxed"
                       rows={3}
@@ -461,8 +464,9 @@ export default function AdminSettingsPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold font-sans">About Me</label>
+                    <label htmlFor="settings_aboutme" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold font-sans">About Me</label>
                     <textarea
+                      id="settings_aboutme"
                       className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors resize-none leading-relaxed"
                       rows={8}
                       value={aboutMe}
@@ -476,8 +480,9 @@ export default function AdminSettingsPage() {
               {/* Advanced info grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-outline-variant/20 pt-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">WhatsApp</label>
+                  <label htmlFor="settings_whatsapp" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">WhatsApp</label>
                   <input
+                    id="settings_whatsapp"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="text"
                     value={whatsapp}
@@ -485,8 +490,9 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Email Address</label>
+                  <label htmlFor="settings_email" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Email Address</label>
                   <input
+                    id="settings_email"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="email"
                     value={email}
@@ -497,8 +503,9 @@ export default function AdminSettingsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">GitHub</label>
+                  <label htmlFor="settings_github" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">GitHub</label>
                   <input
+                    id="settings_github"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="url"
                     value={github}
@@ -506,8 +513,9 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">LinkedIn</label>
+                  <label htmlFor="settings_linkedin" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">LinkedIn</label>
                   <input
+                    id="settings_linkedin"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="url"
                     value={linkedin}
@@ -518,14 +526,15 @@ export default function AdminSettingsPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Tech Stack Used</label>
+                  <span className="block text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Tech Stack Used</span>
                   <div className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface flex items-center min-h-[44px]">
                     <span className="font-semibold">{skills.filter(s => calculatePercentage(s.name) > 0).length}</span>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">GPA Score</label>
+                  <label htmlFor="settings_gpa" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">GPA Score</label>
                   <input
+                    id="settings_gpa"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-primary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="text"
                     value={gpa}
@@ -539,13 +548,13 @@ export default function AdminSettingsPage() {
                 <p className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold mb-4">Automatic Statistics (Read-Only)</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Total Projects</label>
+                    <span className="block text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Total Projects</span>
                     <div className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface flex items-center min-h-[44px]">
                       <span className="font-semibold">{projects?.length ?? 0}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Full-Stack Projects</label>
+                    <span className="block text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Full-Stack Projects</span>
                     <div className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface flex items-center min-h-[44px]">
                       <span className="font-semibold">{projects?.filter((p: any) => {
                         const skillNames = p.skillNames ?? [];
@@ -562,8 +571,9 @@ export default function AdminSettingsPage() {
               {/* Files Upload for Profile and Resume */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-outline-variant/20">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Upload Custom Profile Avatar</label>
+                  <label htmlFor="settings_profile_file" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Upload Custom Profile Avatar</label>
                   <input
+                    id="settings_profile_file"
                     ref={avatarInputRef}
                     type="file"
                     accept="image/*"
@@ -573,8 +583,9 @@ export default function AdminSettingsPage() {
                   />
                   {!profileFile && (
                     <div className="pt-1.5">
-                      <label className="block text-[9px] font-mono uppercase text-on-surface-variant">Or Avatar Image Link</label>
+                      <label htmlFor="settings_profile_url" className="block text-[9px] font-mono uppercase text-on-surface-variant">Or Avatar Image Link</label>
                       <input
+                        id="settings_profile_url"
                         type="text"
                         value={profileImage}
                         onChange={(e) => setProfileImage(e.target.value)}
@@ -585,8 +596,9 @@ export default function AdminSettingsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Upload Professional Resume (PDF)</label>
+                  <label htmlFor="settings_resume_file" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Upload Professional Resume (PDF)</label>
                   <input
+                    id="settings_resume_file"
                     type="file"
                     accept="application/pdf"
                     onChange={handleResumeFileChange}
@@ -595,8 +607,9 @@ export default function AdminSettingsPage() {
                   <p className="text-[10px] text-on-surface-variant mt-1">Prefer PDF for inline display. Uploading .docx will attempt server-side conversion to PDF.</p>
                   {!resumeFile && (
                     <div className="pt-1.5">
-                      <label className="block text-[9px] font-mono uppercase text-on-surface-variant">Or PDF URL Link</label>
+                      <label htmlFor="settings_resume_url" className="block text-[9px] font-mono uppercase text-on-surface-variant">Or PDF URL Link</label>
                       <input
+                        id="settings_resume_url"
                         type="text"
                         value={resumeUrl}
                         onChange={(e) => setResumeUrl(e.target.value)}
@@ -648,8 +661,9 @@ export default function AdminSettingsPage() {
                 {showPasswordForm && (
                   <div className="space-y-4 mt-4 rounded-xl bg-surface-container-low border border-outline-variant/30 p-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Current Password</label>
+                      <label htmlFor="settings_current_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Current Password</label>
                       <input
+                        id="settings_current_password"
                         type="password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
@@ -657,8 +671,9 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">New Password</label>
+                      <label htmlFor="settings_new_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">New Password</label>
                       <input
+                        id="settings_new_password"
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
@@ -666,8 +681,9 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Confirm New Password</label>
+                      <label htmlFor="settings_confirm_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Confirm New Password</label>
                       <input
+                        id="settings_confirm_password"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
@@ -815,8 +831,9 @@ export default function AdminSettingsPage() {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Title</label>
+                  <label htmlFor="settings_meta_title" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Title</label>
                   <input
+                    id="settings_meta_title"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="text"
                     value={metaTitle}
@@ -825,8 +842,9 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Description</label>
+                  <label htmlFor="settings_meta_description" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Description</label>
                   <textarea
+                    id="settings_meta_description"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors resize-none leading-relaxed"
                     rows={3}
                     value={metaDescription}
@@ -835,8 +853,9 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Keywords</label>
+                  <label htmlFor="settings_meta_keywords" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Meta Keywords</label>
                   <input
+                    id="settings_meta_keywords"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                     type="text"
                     value={metaKeywords}
@@ -846,8 +865,9 @@ export default function AdminSettingsPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Title</label>
+                    <label htmlFor="settings_og_title" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Title</label>
                     <input
+                      id="settings_og_title"
                       className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                       type="text"
                       value={ogTitle}
@@ -856,8 +876,9 @@ export default function AdminSettingsPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Image URL</label>
+                    <label htmlFor="settings_og_image" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Image URL</label>
                     <input
+                      id="settings_og_image"
                       className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors"
                       type="text"
                       value={ogImage}
@@ -867,8 +888,9 @@ export default function AdminSettingsPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Description</label>
+                  <label htmlFor="settings_og_description" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">OG Description</label>
                   <textarea
+                    id="settings_og_description"
                     className="w-full bg-transparent border border-outline-variant/30 focus:border-tertiary/50 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:ring-0 outline-none transition-colors resize-none leading-relaxed"
                     rows={2}
                     value={ogDescription}
@@ -915,8 +937,9 @@ export default function AdminSettingsPage() {
                 {showPasswordForm && (
                   <div className="space-y-4 mt-4 rounded-xl bg-surface-container-low border border-outline-variant/30 p-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Current Password</label>
+                      <label htmlFor="settings_seo_current_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Current Password</label>
                       <input
+                        id="settings_seo_current_password"
                         type="password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
@@ -924,8 +947,9 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">New Password</label>
+                      <label htmlFor="settings_seo_new_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">New Password</label>
                       <input
+                        id="settings_seo_new_password"
                         type="password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
@@ -933,8 +957,9 @@ export default function AdminSettingsPage() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Confirm New Password</label>
+                      <label htmlFor="settings_seo_confirm_password" className="text-[10px] font-mono uppercase tracking-wider text-on-surface-variant">Confirm New Password</label>
                       <input
+                        id="settings_seo_confirm_password"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}

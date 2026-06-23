@@ -113,8 +113,9 @@ export default function AdminExperiencesPage() {
 
                         <form onSubmit={handleSave} className="grid grid-cols-12 gap-6">
                             <div className="col-span-12 md:col-span-6 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Company / Institution</label>
+                                <label htmlFor="exp_company" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Company / Institution</label>
                                 <input
+                                    id="exp_company"
                                     required
                                     type="text"
                                     value={form.company}
@@ -125,8 +126,9 @@ export default function AdminExperiencesPage() {
                             </div>
 
                             <div className="col-span-12 md:col-span-6 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Position / Role</label>
+                                <label htmlFor="exp_position" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Position / Role</label>
                                 <input
+                                    id="exp_position"
                                     required
                                     type="text"
                                     value={form.position}
@@ -137,8 +139,9 @@ export default function AdminExperiencesPage() {
                             </div>
 
                             <div className="col-span-12 md:col-span-4 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Start Date</label>
+                                <label htmlFor="exp_start_date" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Start Date</label>
                                 <input
+                                    id="exp_start_date"
                                     required
                                     type="date"
                                     value={form.startDate}
@@ -148,8 +151,9 @@ export default function AdminExperiencesPage() {
                             </div>
 
                             <div className="col-span-12 md:col-span-4 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">End Date</label>
+                                <label htmlFor="exp_end_date" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">End Date</label>
                                 <input
+                                    id="exp_end_date"
                                     type="date"
                                     value={form.endDate ?? ""}
                                     disabled={form.isCurrent}
@@ -171,8 +175,9 @@ export default function AdminExperiencesPage() {
                             </div>
 
                             <div className="col-span-12 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Certificate (PDF/Image)</label>
+                                <label htmlFor="exp_certificate" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Certificate (PDF/Image)</label>
                                 <input
+                                    id="exp_certificate"
                                     type="file"
                                     accept=".pdf,image/*"
                                     onChange={(e) => setCertificateFile(e.target.files?.[0] || null)}
@@ -184,8 +189,9 @@ export default function AdminExperiencesPage() {
                             </div>
 
                             <div className="col-span-12 space-y-2">
-                                <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Description</label>
+                                <label htmlFor="exp_description" className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold">Description</label>
                                 <textarea
+                                    id="exp_description"
                                     required
                                     rows={4}
                                     value={form.description}

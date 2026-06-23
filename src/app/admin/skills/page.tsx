@@ -274,8 +274,9 @@ export default function AdminSkillsPage() {
 
             <form onSubmit={handleSave} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Skill Name</label>
+                <label htmlFor="skill_name" className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Skill Name</label>
                 <input
+                  id="skill_name"
                   required
                   className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary/50 py-2 text-sm text-on-surface outline-none transition-colors"
                   type="text"
@@ -286,8 +287,9 @@ export default function AdminSkillsPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Category</label>
+                <label htmlFor="skill_category" className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider">Category</label>
                 <select
+                  id="skill_category"
                   className="w-full bg-surface-container border border-outline-variant/20 rounded-lg px-3 py-2 text-sm text-on-surface focus:ring-1 focus:ring-primary outline-none"
                   value={form.category || "Language"}
                   onChange={(e) => setForm({ ...form, category: e.target.value as Skill['category'] })}

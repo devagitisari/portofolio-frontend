@@ -123,8 +123,9 @@ export default function AdminLoginPage() {
           </div>
           <div className="flex items-center justify-between text-sm">
 
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label htmlFor="login_remember_me" className="flex items-center gap-2 cursor-pointer">
               <input
+                id="login_remember_me"
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}

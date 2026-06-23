@@ -1022,8 +1022,9 @@ export default function HomePage() {
 
             <form onSubmit={handleFormSubmit} className="space-y-6">
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Name</label>
+                <label htmlFor="home_contact_name" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Name</label>
                 <input
+                  id="home_contact_name"
                   required
                   type="text"
                   name="name"
@@ -1035,8 +1036,9 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Email</label>
+                <label htmlFor="home_contact_email" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Email</label>
                 <input
+                  id="home_contact_email"
                   required
                   type="email"
                   name="email"
@@ -1048,8 +1050,9 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Category</label>
+                <label htmlFor="home_contact_category" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Category</label>
                 <select
+                  id="home_contact_category"
                   name="category"
                   value={formData.category}
                   onChange={handleFormChange}
@@ -1064,8 +1067,9 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Subject</label>
+                <label htmlFor="home_contact_subject" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Subject</label>
                 <input
+                  id="home_contact_subject"
                   type="text"
                   name="subject"
                   value={formData.subject}
@@ -1076,8 +1080,9 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Message</label>
+                <label htmlFor="home_contact_message" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Message</label>
                 <textarea
+                  id="home_contact_message"
                   required
                   name="message"
                   value={formData.message}

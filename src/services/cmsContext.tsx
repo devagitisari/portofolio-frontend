@@ -410,7 +410,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           ((p as any).galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
           const file = (p as any).thumbnailFile as File | undefined;
           if (file) fd.append("thumbnail", file);
-          else if (p.image) fd.append("thumbnail", p.image);
 
           const created = await apiCreateProjectFormData(fd);
           const normalized: Project = {
@@ -535,7 +534,6 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           ((p as any).galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
           const file = (p as any).thumbnailFile as File | undefined;
           if (file) fd.append("thumbnail", file);
-          else if (p.image) fd.append("thumbnail", p.image);
 
           const updatedProject = await apiUpdateProjectFormData(id, fd);
           const normalized: Project = {

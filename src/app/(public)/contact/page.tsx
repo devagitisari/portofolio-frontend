@@ -129,8 +129,9 @@ export default function ContactPage() {
 
             <form onSubmit={handleFormSubmit} className="space-y-6">
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Name</label>
+                <label htmlFor="contact_page_name" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Name</label>
                 <input
+                  id="contact_page_name"
                   required
                   type="text"
                   name="name"
@@ -142,8 +143,9 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Email</label>
+                <label htmlFor="contact_page_email" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Email</label>
                 <input
+                  id="contact_page_email"
                   required
                   type="email"
                   name="email"
@@ -155,8 +157,9 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Category</label>
+                <label htmlFor="contact_page_category" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Category</label>
                 <select
+                  id="contact_page_category"
                   name="category"
                   value={formData.category}
                   onChange={handleFormChange}
@@ -171,8 +174,9 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Subject</label>
+                <label htmlFor="contact_page_subject" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Subject</label>
                 <input
+                  id="contact_page_subject"
                   type="text"
                   name="subject"
                   value={formData.subject}
@@ -183,8 +187,9 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Message</label>
+                <label htmlFor="contact_page_message" className="block text-xs font-mono text-on-surface-variant uppercase mb-2 font-bold select-none">Your Message</label>
                 <textarea
+                  id="contact_page_message"
                   required
                   name="message"
                   value={formData.message}
