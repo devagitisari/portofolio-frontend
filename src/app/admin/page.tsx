@@ -54,7 +54,7 @@ export default function AdminDashboard() {
     return Math.min(projectsUsingSkill * 20, 100);
   };
 
-  // Get top 5 skills based on calculated percentage for trending skills
+  // Get top 8 skills based on calculated percentage for trending skills
   // Only show skills that are used in projects (project_count > 0)
   const topSkills = [...skills]
     .filter(skill => (skill.projectCount ?? 0) > 0)
@@ -63,7 +63,7 @@ export default function AdminDashboard() {
       calculatedPercentage: calculatePercentage(skill.name)
     }))
     .sort((a, b) => b.calculatedPercentage - a.calculatedPercentage)
-    .slice(0, 5);
+    .slice(0, 8);
 
   return (
     <section>
@@ -348,7 +348,10 @@ export default function AdminDashboard() {
                   "border-secondary/30 bg-secondary/10 text-secondary",
                   "border-tertiary/30 bg-tertiary/10 text-tertiary",
                   "border-outline-variant/20 bg-outline-variant/5 text-on-surface-variant",
-                  "border-primary/20 bg-primary/5 text-primary"
+                  "border-primary/20 bg-primary/5 text-primary",
+                  "border-secondary/20 bg-secondary/5 text-secondary",
+                  "border-tertiary/20 bg-tertiary/5 text-tertiary",
+                  "border-outline-variant/30 bg-outline-variant/10 text-on-surface"
                 ];
                 return (
                   <span key={skill.id} className={`px-3 md:px-3.5 py-1 md:py-1.5 rounded-full border text-[11px] md:text-[12px] font-semibold hover:scale-105 transition-transform duration-200 cursor-default ${styles[index] || styles[3]}`}>
