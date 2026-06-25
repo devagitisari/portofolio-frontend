@@ -62,7 +62,7 @@ export default function AdminLayout({
         </div>
 
       {/* Top Header Navigation - Desktop Only */}
-      <header className="hidden md:flex fixed top-0 right-0 left-72 h-16 bg-background/60 backdrop-blur-md border-b border-outline-variant/20 justify-between items-center px-8 z-40 select-none transition-colors duration-300">
+      <header className="hidden md:flex fixed top-0 right-0 left-64 h-16 bg-background/60 backdrop-blur-md border-b border-outline-variant/20 justify-between items-center px-8 z-40 select-none transition-colors duration-300">
         {/* Search Panel */}
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -125,7 +125,7 @@ export default function AdminLayout({
       </header>
 
       {/* Main Workspace Frame */}
-      <main className="ml-0 md:ml-72 pt-20 md:pt-24 px-4 md:px-8 pb-16 max-w-7xl mx-auto admin-mesh-bg min-h-screen transition-colors duration-300">
+      <main className="ml-0 md:ml-64 pt-20 md:pt-24 px-4 md:px-8 pb-16 max-w-7xl mx-auto admin-mesh-bg min-h-screen transition-colors duration-300">
         <div className="pb-12">
           {children}
         </div>
