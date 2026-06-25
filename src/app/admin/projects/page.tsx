@@ -510,7 +510,7 @@ export default function AdminProjectsPage() {
                     <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold select-none">
                       Skills Used in This Project
                     </label>
-                    <div className="flex flex-wrap gap-2 pt-2">
+                    <div className="flex gap-2 pt-2 overflow-x-auto pb-1 scrollbar-hide">
                       {skills.map((skill) => {
                         const isSelected = (form.skillIds ?? []).includes(String(skill.id));
                         return (
@@ -526,7 +526,7 @@ export default function AdminProjectsPage() {
                                 setForm({ ...form, skillIds: [...currentIds, sid] });
                               }
                             }}
-                            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer select-none ${isSelected
+                            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${isSelected
                               ? "bg-tertiary/20 text-tertiary border-tertiary/40 shadow-[0_0_8px_rgba(139,92,246,0.15)]"
                               : "bg-surface-container text-on-surface-variant border-outline-variant/20 hover:border-tertiary/30 hover:text-tertiary"
                               }`}
@@ -659,9 +659,9 @@ export default function AdminProjectsPage() {
 
               {/* Skills Cloud & Timestamp Footer */}
               <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-4">
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
                   {(p.skillNames ?? []).map((skill) => (
-                    <span key={skill} className="px-2.5 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[10px] select-none">
+                    <span key={skill} className="px-2.5 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[10px] select-none whitespace-nowrap">
                       {skill}
                     </span>
                   ))}
