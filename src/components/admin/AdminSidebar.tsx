@@ -63,7 +63,7 @@ export default function AdminSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: 
       )}
 
       <aside
-        className={`h-screen w-64 fixed left-0 top-0 bg-surface/80 backdrop-blur-xl border-r border-outline-variant/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] flex flex-col py-8 z-50 shrink-0 transition-colors duration-300 ${
+        className={`h-[90vh] w-64 fixed left-4 md:left-6 top-[5vh] rounded-3xl bg-surface/80 backdrop-blur-xl border border-outline-variant/20 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] flex flex-col py-8 z-50 shrink-0 transition-colors duration-300 ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0`}
       >

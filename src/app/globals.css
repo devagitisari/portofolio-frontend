@@ -1,8 +1,5 @@
 /* src/app/globals.css */
 
-/* Google Fonts & Icon Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Geist:wght@400;500&display=swap');
-
 @import "tailwindcss";
 
 @theme {
@@ -77,8 +74,8 @@
   --spacing-unit: 8px;
 
   /* Typography Fonts */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'Geist', monospace;
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
 
   /* Custom Spacing Classes */
   --px-gutter: var(--spacing-gutter);
