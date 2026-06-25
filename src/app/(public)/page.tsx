@@ -231,7 +231,7 @@ export default function HomePage() {
             >
               <motion.span
                 variants={fadeInUp}
-                className="font-sans text-sm md:text-base font-bold text-primary uppercase tracking-widest mb-4 block"
+                className="font-mono text-label-mono text-primary uppercase tracking-widest mb-4 block"
               >
                 About Me
               </motion.span>
