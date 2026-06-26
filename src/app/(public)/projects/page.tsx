@@ -49,7 +49,7 @@ export default function ProjectsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex justify-center items-center gap-1.5 mb-16 overflow-x-auto pb-2 scrollbar-hide select-none bg-surface-container/30 border border-white/5 p-1.5 rounded-2xl max-w-lg mx-auto backdrop-blur-md shadow-2xl relative z-20">
+      <div className="flex justify-center items-center gap-1.5 mb-16 select-none bg-surface-container/30 border border-white/5 p-1.5 rounded-2xl mx-auto backdrop-blur-md shadow-2xl relative z-20 w-fit">
         <Filter size={16} className="text-on-surface-variant/40 ml-2 shrink-0" />
         {categories.map((cat) => {
           const isActive = activeTab === cat;
@@ -57,7 +57,7 @@ export default function ProjectsPage() {
             <button
               key={cat}
               onClick={() => setActiveTab(cat)}
-              className={`relative px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer shrink-0 ${isActive ? "text-white" : "text-on-surface-variant hover:text-primary"
+              className={`relative px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${isActive ? "text-white" : "text-on-surface-variant hover:text-primary"
                 }`}
             >
               <span className="relative z-10">{cat}</span>
@@ -129,14 +129,14 @@ export default function ProjectsPage() {
                   <div>
                     {/* Skills Used */}
                     <div className="flex flex-wrap gap-3 mb-6 select-none">
-                      {(project.skillNames ?? []).slice(0, 3).map(skill => (
+                      {(project.skillNames ?? []).slice(0, 2).map(skill => (
                         <span key={skill} className="bg-tertiary/10 border border-tertiary/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-tertiary">
                           {skill}
                         </span>
                       ))}
-                      {(project.skillNames ?? []).length > 3 && (
+                      {(project.skillNames ?? []).length > 2 && (
                         <span className="bg-tertiary/10 border border-tertiary/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-tertiary">
-                          +{(project.skillNames ?? []).length - 3}
+                          +{(project.skillNames ?? []).length - 2}
                         </span>
                       )}
                     </div>
