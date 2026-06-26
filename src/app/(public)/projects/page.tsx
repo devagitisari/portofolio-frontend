@@ -49,15 +49,15 @@ export default function ProjectsPage() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex justify-center items-center gap-1.5 mb-16 flex-wrap select-none bg-surface-container/30 border border-white/5 p-1.5 rounded-2xl max-w-lg mx-auto backdrop-blur-md shadow-2xl relative z-20">
-        <Filter size={16} className="text-on-surface-variant/40 ml-2" />
+      <div className="flex justify-center items-center gap-1.5 mb-16 overflow-x-auto pb-2 scrollbar-hide select-none bg-surface-container/30 border border-white/5 p-1.5 rounded-2xl max-w-lg mx-auto backdrop-blur-md shadow-2xl relative z-20">
+        <Filter size={16} className="text-on-surface-variant/40 ml-2 shrink-0" />
         {categories.map((cat) => {
           const isActive = activeTab === cat;
           return (
             <button
               key={cat}
               onClick={() => setActiveTab(cat)}
-              className={`relative px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${isActive ? "text-white" : "text-on-surface-variant hover:text-primary"
+              className={`relative px-4 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer shrink-0 ${isActive ? "text-white" : "text-on-surface-variant hover:text-primary"
                 }`}
             >
               <span className="relative z-10">{cat}</span>

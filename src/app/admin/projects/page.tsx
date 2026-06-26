@@ -665,14 +665,14 @@ export default function AdminProjectsPage() {
               {/* Skills Cloud & Timestamp Footer */}
               <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-4">
                 <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
-                  {(p.skillNames ?? []).slice(0, 8).map((skill) => (
+                  {(p.skillNames ?? []).slice(0, 5).map((skill) => (
                     <span key={skill} className="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[9px] select-none whitespace-nowrap">
                       {skill}
                     </span>
                   ))}
-                  {(p.skillNames ?? []).length > 8 && (
+                  {(p.skillNames ?? []).length > 5 && (
                     <span className="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[9px] select-none">
-                      +{(p.skillNames ?? []).length - 8}
+                      +{(p.skillNames ?? []).length - 5}
                     </span>
                   )}
                 </div>
