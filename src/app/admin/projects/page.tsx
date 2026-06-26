@@ -515,7 +515,7 @@ export default function AdminProjectsPage() {
                     <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold select-none">
                       Skills Used in This Project
                     </label>
-                    <div className="flex gap-2 pt-2 overflow-x-auto pb-1 scrollbar-hide">
+                    <div className="flex flex-wrap gap-2 pt-2">
                       {skills.map((skill) => {
                         const isSelected = (form.skillIds ?? []).includes(String(skill.id));
                         return (
@@ -665,11 +665,16 @@ export default function AdminProjectsPage() {
               {/* Skills Cloud & Timestamp Footer */}
               <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-4">
                 <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
-                  {(p.skillNames ?? []).map((skill) => (
+                  {(p.skillNames ?? []).slice(0, 8).map((skill) => (
                     <span key={skill} className="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[9px] select-none whitespace-nowrap">
                       {skill}
                     </span>
                   ))}
+                  {(p.skillNames ?? []).length > 8 && (
+                    <span className="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[9px] select-none">
+                      +{(p.skillNames ?? []).length - 8}
+                    </span>
+                  )}
                 </div>
                 <div className="flex justify-between items-center text-[10px] font-mono text-on-surface-variant select-none">
                   <span>
