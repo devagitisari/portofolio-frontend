@@ -17,6 +17,7 @@ export default function AdminProjectsPage() {
   const [galleryFileMap, setGalleryFileMap] = useState<Record<string, File[]>>({});
   const [galleryPreviewMap, setGalleryPreviewMap] = useState<Record<string, string[]>>({});
   const [previewMap, setPreviewMap] = useState<Record<string, string | null>>({});
+  const [deletedImageIds, setDeletedImageIds] = useState<Set<string>>(new Set());
 
 
   // cleanup object URLs on unmount
@@ -59,6 +60,9 @@ export default function AdminProjectsPage() {
     setEditingId(p.id);
     setShowAddForm(false);
     setForm({ ...p });
+    setGalleryFileMap({});
+    setGalleryPreviewMap({});
+    setDeletedImageIds(new Set());
   };
 
   const cancelForm = () => {
@@ -67,6 +71,7 @@ export default function AdminProjectsPage() {
     setForm({});
     setGalleryFileMap({});
     setGalleryPreviewMap({});
+    setDeletedImageIds(new Set());
   };
 
 
@@ -95,6 +100,7 @@ export default function AdminProjectsPage() {
       const f = fileMap[editingId];
       if (f) (payload as any).thumbnailFile = f;
       (payload as any).galleryFiles = galleryFileMap[editingId] ?? [];
+      (payload as any).deletedImageIds = Array.from(deletedImageIds);
       await updateProject(editingId, payload);
     } else {
       const f = fileMap["new_file"];
@@ -464,10 +470,12 @@ export default function AdminProjectsPage() {
                     onChange={(e) => {
                       const files = Array.from(e.target.files ?? []);
                       const key = editingId ?? "new_file";
-                      setGalleryFileMap({ ...galleryFileMap, [key]: files });
+                      const existingFiles = galleryFileMap[key] ?? [];
+                      const existingPreviews = galleryPreviewMap[key] ?? [];
+                      setGalleryFileMap({ ...galleryFileMap, [key]: [...existingFiles, ...files] });
                       setGalleryPreviewMap({
                         ...galleryPreviewMap,
-                        [key]: files.map((file) => URL.createObjectURL(file)),
+                        [key]: [...existingPreviews, ...files.map((file) => URL.createObjectURL(file))],
                       });
                     }}
                     className="text-xs text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-outline-variant/10 file:text-on-surface hover:file:bg-outline-variant/20 cursor-pointer"
@@ -483,11 +491,42 @@ export default function AdminProjectsPage() {
                     placeholder="Optional: paste multiple image URLs, one per line"
                   />
                   <div className="grid grid-cols-4 gap-2">
-                    {(galleryPreviewMap[editingId ?? "new_file"] ?? []).map((src) => (
-                      <img key={src} src={src} className="h-16 w-full rounded-lg object-cover border border-outline-variant/30" alt="Gallery preview" />
+                    {(galleryPreviewMap[editingId ?? "new_file"] ?? []).map((src, idx) => (
+                      <div key={src} className="relative group">
+                        <img src={src} className="h-16 w-full rounded-lg object-cover border border-outline-variant/30" alt="Gallery preview" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const key = editingId ?? "new_file";
+                            const newFiles = (galleryFileMap[key] ?? []).filter((_, i) => i !== idx);
+                            const newPreviews = (galleryPreviewMap[key] ?? []).filter((_, i) => i !== idx);
+                            setGalleryFileMap({ ...galleryFileMap, [key]: newFiles });
+                            setGalleryPreviewMap({ ...galleryPreviewMap, [key]: newPreviews });
+                          }}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">close</span>
+                        </button>
+                      </div>
                     ))}
-                    {(form.images ?? []).slice(0, 4).map((image) => (
-                      <img key={String(image.id ?? image.image)} src={image.image} className="h-16 w-full rounded-lg object-cover border border-outline-variant/30" alt="Existing gallery" />
+                    {(form.images ?? [])
+                      .filter((image) => !deletedImageIds.has(String(image.id)))
+                      .slice(0, 4)
+                      .map((image) => (
+                      <div key={String(image.id ?? image.image)} className="relative group">
+                        <img src={image.image} className="h-16 w-full rounded-lg object-cover border border-outline-variant/30" alt="Existing gallery" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (image.id) {
+                              setDeletedImageIds(new Set([...deletedImageIds, String(image.id)]));
+                            }
+                          }}
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-[12px]">close</span>
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </div>

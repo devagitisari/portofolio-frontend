@@ -532,6 +532,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           fd.append("featured", p.featured ? "1" : "0");
           (p.imageUrls ?? []).forEach((url) => fd.append("image_urls[]", url));
           ((p as any).galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
+          ((p as any).deletedImageIds ?? []).forEach((id: string) => fd.append("deleted_image_ids[]", id));
           const file = (p as any).thumbnailFile as File | undefined;
           if (file) fd.append("thumbnail", file);
 
