@@ -118,7 +118,12 @@ export default function AdminProjectsPage() {
     project.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     project.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     project.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  ).sort((a, b) => {
+    // Sort by start date (newest first)
+    const dateA = new Date(a.startDate || 0);
+    const dateB = new Date(b.startDate || 0);
+    return dateB.getTime() - dateA.getTime();
+  });
 
   // Toggle project selection
   const toggleProjectSelection = (projectId: string) => {
@@ -369,14 +374,14 @@ export default function AdminProjectsPage() {
                   </div>
                   <div className="space-y-2">
                     <label className="block font-mono text-[11px] uppercase text-on-surface-variant tracking-wider font-bold select-none">
-                      Github Link
+                      {form.category === "Data Science" ? "Journal Link" : form.category === "Internet of Things" ? "Documentation Link" : form.category === "UI/UX Design" ? "Figma Link" : "Github Link"}
                     </label>
                     <input
                       type="url"
                       value={form.githubUrl || ""}
                       onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
                       className="w-full bg-transparent border-b border-outline-variant/30 focus:border-primary/50 border-t-0 border-x-0 outline-none px-0 py-3 text-sm text-on-surface focus:ring-0"
-                      placeholder="https://github..."
+                      placeholder={form.category === "Data Science" ? "https://journal..." : form.category === "Internet of Things" ? "https://docs..." : form.category === "UI/UX Design" ? "https://figma..." : "https://github..."}
                     />
                   </div>
                 </div>
@@ -659,9 +664,9 @@ export default function AdminProjectsPage() {
 
               {/* Skills Cloud & Timestamp Footer */}
               <div className="flex flex-col gap-4 border-t border-outline-variant/20 pt-4">
-                <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+                <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
                   {(p.skillNames ?? []).map((skill) => (
-                    <span key={skill} className="px-2.5 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[10px] select-none whitespace-nowrap">
+                    <span key={skill} className="px-2 py-0.5 rounded-md bg-surface-container border border-outline-variant/20 text-on-surface-variant font-mono text-[9px] select-none whitespace-nowrap">
                       {skill}
                     </span>
                   ))}

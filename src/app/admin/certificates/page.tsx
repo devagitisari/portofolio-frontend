@@ -32,6 +32,13 @@ export default function AdminCertificatesPage() {
     const fileRef = useRef<HTMLInputElement>(null);
     const [dragActive, setDragActive] = useState(false);
 
+    // Sort certificates by date (newest first)
+    const sortedCertificates = [...certificates].sort((a, b) => {
+        const dateA = new Date(a.date || 0);
+        const dateB = new Date(b.date || 0);
+        return dateB.getTime() - dateA.getTime();
+    });
+
     const resetForm = () => ({
         title: "",
         issuer: "",
@@ -306,7 +313,7 @@ export default function AdminCertificatesPage() {
             )}
 
             {/* Certificate Grid */}
-            {certificates.length === 0 ? (
+            {sortedCertificates.length === 0 ? (
                 <div className="admin-glass-card rounded-2xl p-16 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-[64px] opacity-30 mb-4 block">workspace_premium</span>
                     <p className="font-sans text-lg font-bold text-on-surface mb-2">No certificates yet</p>
@@ -314,7 +321,7 @@ export default function AdminCertificatesPage() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {certificates.map((cert) => {
+                    {sortedCertificates.map((cert) => {
                         const imgUrl = getCertImageUrl(cert);
                         return (
                             <div

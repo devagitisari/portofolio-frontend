@@ -22,7 +22,7 @@ function formatDate(value?: string | null) {
     if (!value) return "Present";
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 export async function generateStaticParams() {
@@ -147,7 +147,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                                         className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:border-primary/50 font-semibold transition-all"
                                     >
                                         <GitBranch size={18} />
-                                        <span>View on GitHub</span>
+                                        <span>{project.category === "Data Science" ? "View Journal" : project.category === "Internet of Things" ? "View Documentation" : project.category === "UI/UX Design" ? "View on Figma" : "View on GitHub"}</span>
                                     </a>
                                 )}
                                 {project.demoUrl && (

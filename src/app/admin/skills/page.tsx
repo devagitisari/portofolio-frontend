@@ -28,7 +28,7 @@ function ToggleControl({
 }
 
 export default function AdminSkillsPage() {
-  const { skills, settings, addSkill, deleteSkill, updateSkill, updateSettings } = useCMS();
+  const { skills, settings, addSkill, deleteSkill, updateSkill, updateSettings, projects } = useCMS();
   const { showSuccess, showError } = useToast();
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -37,6 +37,21 @@ export default function AdminSkillsPage() {
     category: "Language"
   });
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Calculate percentage based on project usage (same as public page)
+  // 1 project = 20%, 2 = 40%, 3 = 60%, 4 = 80%, 5+ = 100%
+  const calculatePercentage = (skillName: string): number => {
+    const projectsUsingSkill = projects.filter(p =>
+      (p.skillNames ?? []).some(s => s.toLowerCase() === skillName.toLowerCase())
+    ).length;
+    return Math.min(projectsUsingSkill * 20, 100);
+  };
+
+  // Enrich skills with calculated percentages
+  const enrichedSkills = skills.map(s => ({
+    ...s,
+    calculatedPercentage: calculatePercentage(s.name)
+  }));
 
 
 
@@ -84,9 +99,9 @@ export default function AdminSkillsPage() {
   };
 
   // Group skills by category (only show skills used in projects)
-  const languageSkills = skills.filter((s) => s.category === "Language" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  const frameworkSkills = skills.filter((s) => s.category === "Framework" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  const infraSkills = skills.filter((s) => s.category === "Other" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const languageSkills = enrichedSkills.filter((s) => s.category === "Language" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const frameworkSkills = enrichedSkills.filter((s) => s.category === "Framework" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  const infraSkills = enrichedSkills.filter((s) => s.category === "Other" && (s.calculatedPercentage ?? 0) > 0 && s.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const toggleSetting = (key: "autoUpdateSkillBadges" | "showGitHubActivity") => {
     void updateSettings({ [key]: !settings[key] });
@@ -361,8 +376,8 @@ export default function AdminSkillsPage() {
                   <div className="border-t border-on-surface w-full"></div>
                   <div className="border-t border-on-surface w-full"></div>
                 </div>
-                {skills.length > 0 ? (
-                  [...skills].filter((s) => (s.calculatedPercentage ?? 0) > 0).sort((a, b) => (b.calculatedPercentage || b.percentage) - (a.calculatedPercentage || a.percentage)).slice(0, 8).map((skill) => {
+                {enrichedSkills.length > 0 ? (
+                  [...enrichedSkills].filter((s) => (s.calculatedPercentage ?? 0) > 0).sort((a, b) => (b.calculatedPercentage || b.percentage) - (a.calculatedPercentage || a.percentage)).slice(0, 8).map((skill) => {
                     const gradient = skill.category === "Language"
                       ? "from-primary/40 to-primary"
                       : skill.category === "Framework"
@@ -389,9 +404,9 @@ export default function AdminSkillsPage() {
               </div>
             </div>
 
-            {skills.length > 0 && (
+            {enrichedSkills.length > 0 && (
               <div className="flex justify-between mt-4 text-[10px] font-mono text-on-surface-variant px-6 border-t border-outline-variant/20 pt-4 select-none">
-                {[...skills].sort((a, b) => b.percentage - a.percentage).slice(0, 8).map((skill) => (
+                {[...enrichedSkills].sort((a, b) => (b.calculatedPercentage || b.percentage) - (a.calculatedPercentage || a.percentage)).slice(0, 8).map((skill) => (
                   <span key={skill.id} className="truncate max-w-[80px] text-center">{skill.name}</span>
                 ))}
               </div>

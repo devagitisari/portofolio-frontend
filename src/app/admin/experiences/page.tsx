@@ -17,6 +17,13 @@ export default function AdminExperiencesPage() {
     });
     const [certificateFile, setCertificateFile] = useState<File | null>(null);
 
+    // Sort experiences by start date (newest first)
+    const sortedExperiences = [...experiences].sort((a, b) => {
+        const dateA = new Date(a.startDate || 0);
+        const dateB = new Date(b.startDate || 0);
+        return dateB.getTime() - dateA.getTime();
+    });
+
     const startAdd = () => {
         setEditingId(null);
         setForm({ company: "", position: "", description: "", startDate: "", endDate: "", isCurrent: false });
@@ -223,7 +230,7 @@ export default function AdminExperiencesPage() {
             )}
 
             {/* Experience List */}
-            {experiences.length === 0 ? (
+            {sortedExperiences.length === 0 ? (
                 <div className="admin-glass-card rounded-2xl p-16 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-[64px] opacity-30 mb-4 block">history</span>
                     <p className="font-sans text-lg font-bold text-on-surface mb-2">No experiences yet</p>
@@ -233,7 +240,7 @@ export default function AdminExperiencesPage() {
                 <div className="relative">
                     <div className="absolute left-6 top-4 bottom-4 border-l-2 border-primary/20 z-0" />
                     <div className="space-y-6">
-                        {experiences.map((exp, idx) => (
+                        {sortedExperiences.map((exp, idx) => (
                             <div key={exp.id} className="relative pl-16 group">
                                 {/* Timeline dot */}
                                 <div className={`absolute left-[15px] top-6 w-5 h-5 rounded-full z-10 transition-transform group-hover:scale-125 duration-300 ${idx % 2 === 0 ? "bg-primary shadow-[0_0_12px_rgba(255,105,180,0.6)]" : "bg-tertiary shadow-[0_0_12px_rgba(0,247,232,0.6)]"}`} />
