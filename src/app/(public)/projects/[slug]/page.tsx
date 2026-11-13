@@ -2,10 +2,8 @@ import { notFound } from "next/navigation";
 import { ExternalLink, GitBranch } from "lucide-react";
 import ProjectGallery from "@/components/public/ProjectGallery";
 
-import { BACKEND_API_URL } from "@/services/backendApi";
 import { currentApiBase } from "@/lib/api/serverOrigin";
 import type { ApiProject } from "@/services/apiTypes";
-
 async function getProject(slug: string, apiBase: string): Promise<ApiProject> {
     const response = await fetch(`${apiBase}/projects/${slug}`, {
         cache: "no-store",
@@ -28,21 +26,11 @@ function formatDate(value?: string | null) {
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-export async function generateStaticParams() {
-    try {
-        const response = await fetch(`${BACKEND_API_URL}/projects`, {
-            next: { revalidate: 60 },
-        });
-        if (!response.ok) return [];
-        const json = (await response.json()) as { data?: ApiProject[] } | ApiProject[];
-        const projects = Array.isArray(json) ? json : json.data ?? [];
-        return projects.map((project) => ({
-            slug: project.slug ?? "",
-        }));
-    } catch {
-        return [];
-    }
-}
+/**
+ * Rendered per request: the page reads the request origin to call the API, so
+ * it must not be prerendered at build time.
+ */
+export const dynamic = "force-dynamic";
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     let project: ApiProject;

@@ -1,25 +1,14 @@
 import { notFound } from "next/navigation";
 import { ExternalLink, Award } from "lucide-react";
-import { BACKEND_API_URL } from "@/services/backendApi";
 import { currentApiBase } from "@/lib/api/serverOrigin";
 import type { ApiCertificate } from "@/services/apiTypes";
 import PDFPreview from "@/components/pdf/PDFPreview";
 
-export async function generateStaticParams() {
-    try {
-        const response = await fetch(`${BACKEND_API_URL}/certificates`, {
-            next: { revalidate: 60 },
-        });
-        if (!response.ok) return [];
-        const json = (await response.json()) as { data?: ApiCertificate[] } | ApiCertificate[];
-        const certificates = Array.isArray(json) ? json : json.data ?? [];
-        return certificates.map((cert) => ({
-            id: String(cert.id),
-        }));
-    } catch {
-        return [];
-    }
-}
+/**
+ * Rendered per request: the page reads the request origin to call the API, so
+ * it must not be prerendered at build time.
+ */
+export const dynamic = "force-dynamic";
 
 export default async function CertificateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
