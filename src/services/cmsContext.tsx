@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import {
   getProjects as apiGetProjects,
   getSkills as apiGetSkills,
@@ -31,15 +31,42 @@ import {
   deleteInquiry as apiDeleteInquiry,
   postContact as apiPostContact,
   isAdminLogged,
-  BACKEND_API_URL,
+  apiBase,
 } from "@/services/backendApi";
+import type { ApiExperience, ApiProject } from "@/services/apiTypes";
+import type { BackendInquiry } from "@/services/backendApi";
 
-const BACKEND_URL = BACKEND_API_URL.replace(/\/api\/?$/, "");
+// Di browser prefixnya kosong (URL relatif), di server dipakai base URL absolut.
+const BACKEND_URL = apiBase();
 
 const formatImageUrl = (url?: string | null): string => {
   if (!url) return "";
   return url.startsWith('http') ? url : `${BACKEND_URL}${url}`;
 };
+
+/** Maps an API project payload onto the shape the UI works with. */
+const normalizeProjectPayload = (payload: ApiProject): Project => ({
+  id: String(payload.id),
+  title: payload.title,
+  category: payload.category ?? "",
+  description: payload.description,
+  skillIds: (payload.skillIds ?? []).map(String),
+  skillNames: payload.skillNames ?? [],
+  image: formatImageUrl(payload.image),
+  images: (payload.images ?? []).map((img) => ({ ...img, image: formatImageUrl(img.image) })),
+  longDescription: payload.long_description ?? payload.longDescription ?? undefined,
+  projectRole: payload.projectRole ?? payload.project_role ?? undefined,
+  problem: payload.problem ?? undefined,
+  solution: payload.solution ?? undefined,
+  keyFeatures: payload.keyFeatures ?? payload.key_features ?? [],
+  impact: payload.impact ?? undefined,
+  githubUrl: payload.github_url ?? payload.githubUrl ?? undefined,
+  demoUrl: payload.demo_url ?? payload.demoUrl ?? undefined,
+  status: payload.status ?? undefined,
+  featured: payload.featured ?? false,
+  startDate: payload.startDate ?? payload.start_date ?? null,
+  endDate: payload.endDate ?? payload.end_date ?? null,
+});
 
 // Types definition
 export interface Project {
@@ -65,6 +92,10 @@ export interface Project {
   featured?: boolean;
   startDate?: string | null;
   endDate?: string | null;
+  /** Optional uploads handled by the admin form. */
+  thumbnailFile?: File | null;
+  galleryFiles?: File[];
+  deletedImageIds?: string[];
 }
 
 export interface Skill {
@@ -73,7 +104,12 @@ export interface Skill {
   percentage: number;
   calculatedPercentage?: number;
   projectCount?: number;
-  category: "Language" | "Framework" | "Other";
+  /**
+   * Free-form category coming from the CMS ("Languages",
+   * "Frameworks & Tools", "Other Skills", …). Use `skillGroup()` from
+   * `@/services/skillUtils` to map it to a group.
+   */
+  category: string;
   show_on_home?: boolean;
 }
 
@@ -97,6 +133,8 @@ export interface Certificate {
   expiresDate?: string | null; // YYYY-MM-DD
   credentialUrl?: string | null;
   image?: string | null;
+  /** Optional uploads handled by the admin form. */
+  imageFile?: File | null;
 }
 
 export interface Message {
@@ -190,15 +228,19 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     resumeUrl: undefined,
   });
 
+  // Snapshot of the initial settings, used as fallback inside the mount-only
+  // data loader (a ref keeps the effect free of state dependencies).
+  const initialSettings = useRef(settings);
+
   const [loaded, setLoaded] = useState(false); // Start with loading state
 
-  const mapInquiryToMessage = (inquiry: any): Message => ({
+  const mapInquiryToMessage = (inquiry: BackendInquiry): Message => ({
     id: String(inquiry.id),
     name: inquiry.name,
     email: inquiry.email,
     subject: inquiry.subject,
     category: inquiry.category,
-    message: inquiry.message,
+    message: inquiry.message ?? "",
     date: inquiry.created_at ?? new Date().toISOString(),
     read: Boolean(inquiry.is_read),
     replied: Boolean(inquiry.is_replied),
@@ -242,11 +284,11 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (storedMessages) {
-        const parsedMessages = JSON.parse(storedMessages);
+        const parsedMessages = JSON.parse(storedMessages) as Message[];
         // Filter out locally-generated messages (msg- prefix) that don't exist in backend
-        const validMessages = parsedMessages.filter((m: any) => !m.id.startsWith('msg-'));
+        const validMessages = parsedMessages.filter((m) => !(m.id ?? "").startsWith('msg-'));
         // Ensure all messages have the replied field
-        const messagesWithReplied = validMessages.map((m: any) => ({
+        const messagesWithReplied = validMessages.map((m) => ({
           ...m,
           replied: m.replied ?? false,
         }));
@@ -271,26 +313,26 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         ]);
 
         if (Array.isArray(projectsData)) {
-          const normalizedProjects = projectsData.map((proj: any) => ({
+          const normalizedProjects = projectsData.map((proj) => ({
             id: String(proj.id),
-            slug: proj.slug,
+            slug: proj.slug ?? undefined,
             title: proj.title,
-            category: proj.category,
+            category: proj.category ?? "",
             description: proj.description,
             skillIds: (proj.skillIds ?? []).map(String),
             skillNames: (proj.skillNames ?? []),
             image: formatImageUrl(proj.image),
-            images: (proj.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
-            longDescription: proj.longDescription ?? proj.long_description,
-            projectRole: proj.projectRole ?? proj.project_role,
-            problem: proj.problem,
-            solution: proj.solution,
+            images: (proj.images ?? []).map((img) => ({ ...img, image: formatImageUrl(img.image) })),
+            longDescription: proj.longDescription ?? proj.long_description ?? undefined,
+            projectRole: proj.projectRole ?? proj.project_role ?? undefined,
+            problem: proj.problem ?? undefined,
+            solution: proj.solution ?? undefined,
             keyFeatures: proj.keyFeatures ?? proj.key_features ?? [],
-            impact: proj.impact,
-            githubUrl: proj.githubUrl ?? proj.github_url,
-            demoUrl: proj.demoUrl ?? proj.demo_url,
-            status: proj.status,
-            featured: proj.featured,
+            impact: proj.impact ?? undefined,
+            githubUrl: proj.githubUrl ?? proj.github_url ?? undefined,
+            demoUrl: proj.demoUrl ?? proj.demo_url ?? undefined,
+            status: proj.status ?? undefined,
+            featured: proj.featured ?? false,
             startDate: proj.startDate ?? proj.start_date ?? null,
             endDate: proj.endDate ?? proj.end_date ?? null,
           })) as Project[];
@@ -299,7 +341,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (Array.isArray(skillsData)) {
-          const normalizedSkills = skillsData.map((s: any) => ({
+          const normalizedSkills = skillsData.map((s) => ({
             id: String(s.id),
             name: s.name,
             percentage: Number(s.percentage),
@@ -313,13 +355,13 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (Array.isArray(experiencesData)) {
-          const formattedExperiences = experiencesData.map((e: any) => ({
+          const formattedExperiences = experiencesData.map((e) => ({
             id: String(e.id),
             company: e.company,
             position: e.position,
             description: e.description,
-            startDate: e.start_date,
-            endDate: e.end_date,
+            startDate: e.start_date ?? "",
+            endDate: e.end_date ?? null,
             isCurrent: Boolean(e.is_current),
             certificate: e.certificate ? (e.certificate.startsWith('http') ? e.certificate : `${BACKEND_URL}/storage/${e.certificate}`) : null,
           }));
@@ -328,38 +370,41 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (Array.isArray(certificatesData)) {
-          const normalizedCerts = certificatesData.map((c: any) => ({
+          const normalizedCerts = certificatesData.map((c) => ({
             id: String(c.id),
             title: c.title,
             issuer: c.issuer,
             description: c.description ?? null,
-            date: c.date,
+            date: c.date ?? null,
             expiresDate: c.expires_date ?? null,
             credentialUrl: c.credential_url ?? null,
-            image: c.image,
+            image: c.image ?? null,
           }));
           setCertificates(normalizedCerts);
           persistCertificates(normalizedCerts);
         }
 
         if (settingsData) {
+          // Fallbacks come from the settings that existed when the provider
+          // mounted — captured in a ref so the effect stays mount-only.
+          const fallback = initialSettings.current;
           const normalized: Settings = {
-            id: settingsData.id,
-            name: settingsData.name ?? settingsData.site_name ?? settings.name,
-            title: settingsData.title ?? settingsData.tagline ?? settings.title,
-            email: settingsData.email ?? settings.email,
-            whatsapp: settingsData.whatsapp ?? settings.whatsapp,
-            github: settingsData.github ?? settings.github,
-            linkedin: settingsData.linkedin ?? settings.linkedin,
-            gpa: settingsData.gpa ?? settings.gpa,
-            completedProjects: Number(settingsData.completedProjects ?? settingsData.completed_projects ?? settings.completedProjects),
-            techStackCount: Number(settingsData.techStackCount ?? settingsData.tech_stack_count ?? settings.techStackCount),
-            autoUpdateSkillBadges: Boolean(settingsData.autoUpdateSkillBadges ?? settingsData.auto_update_skill_badges ?? settings.autoUpdateSkillBadges),
-            showGitHubActivity: Boolean(settingsData.showGitHubActivity ?? settingsData.show_github_activity ?? settings.showGitHubActivity),
-            bio: settingsData.bio ?? settings.bio,
-            aboutMe: settingsData.aboutMe ?? settingsData.about_me ?? settings.aboutMe,
-            profileImage: settingsData.profileImage ? (settingsData.profileImage.startsWith('http') ? settingsData.profileImage : `${BACKEND_URL}${settingsData.profileImage}`) : settings.profileImage,
-            resumeUrl: settingsData.resumeUrl ? (settingsData.resumeUrl.startsWith('http') ? settingsData.resumeUrl : `${BACKEND_URL}${settingsData.resumeUrl}`) : settings.resumeUrl,
+            id: settingsData.id != null ? Number(settingsData.id) : undefined,
+            name: settingsData.name ?? settingsData.site_name ?? fallback.name,
+            title: settingsData.title ?? settingsData.tagline ?? fallback.title,
+            email: settingsData.email ?? fallback.email,
+            whatsapp: settingsData.whatsapp ?? fallback.whatsapp,
+            github: settingsData.github ?? fallback.github,
+            linkedin: settingsData.linkedin ?? fallback.linkedin,
+            gpa: settingsData.gpa ?? fallback.gpa,
+            completedProjects: Number(settingsData.completedProjects ?? settingsData.completed_projects ?? fallback.completedProjects),
+            techStackCount: Number(settingsData.techStackCount ?? settingsData.tech_stack_count ?? fallback.techStackCount),
+            autoUpdateSkillBadges: Boolean(settingsData.autoUpdateSkillBadges ?? settingsData.auto_update_skill_badges ?? fallback.autoUpdateSkillBadges),
+            showGitHubActivity: Boolean(settingsData.showGitHubActivity ?? settingsData.show_github_activity ?? fallback.showGitHubActivity),
+            bio: settingsData.bio ?? fallback.bio,
+            aboutMe: settingsData.aboutMe ?? settingsData.about_me ?? fallback.aboutMe,
+            profileImage: settingsData.profileImage ? (settingsData.profileImage.startsWith('http') ? settingsData.profileImage : `${BACKEND_URL}${settingsData.profileImage}`) : fallback.profileImage,
+            resumeUrl: settingsData.resumeUrl ? (settingsData.resumeUrl.startsWith('http') ? settingsData.resumeUrl : `${BACKEND_URL}${settingsData.resumeUrl}`) : fallback.resumeUrl,
           };
           setSettings(normalized);
           persistSettings(normalized);
@@ -388,7 +433,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     if (isAdminLogged()) {
       try {
         // support optional file upload via thumbnailFile
-        if ((p as any).thumbnailFile || ((p as any).galleryFiles ?? []).length > 0) {
+        if (p.thumbnailFile || (p.galleryFiles ?? []).length > 0) {
           const fd = new FormData();
           fd.append("title", p.title ?? "");
           fd.append("category", p.category ?? "");
@@ -407,40 +452,19 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           if (p.startDate !== undefined) fd.append("start_date", p.startDate ?? "");
           if (p.endDate !== undefined) fd.append("end_date", p.endDate ?? "");
           (p.imageUrls ?? []).forEach((url) => fd.append("image_urls[]", url));
-          ((p as any).galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
-          const file = (p as any).thumbnailFile as File | undefined;
+          (p.galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
+          const file = p.thumbnailFile as File | undefined;
           if (file) fd.append("thumbnail", file);
 
           const created = await apiCreateProjectFormData(fd);
-          const normalized: Project = {
-            id: String(created.id),
-            title: created.title,
-            category: created.category,
-            description: created.description,
-            skillIds: (created.skillIds ?? []).map(String),
-            skillNames: (created.skillNames ?? []),
-            image: formatImageUrl(created.image),
-            images: (created.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
-            longDescription: created.long_description ?? created.longDescription,
-            projectRole: created.projectRole ?? created.project_role,
-            problem: created.problem,
-            solution: created.solution,
-            keyFeatures: created.keyFeatures ?? created.key_features ?? [],
-            impact: created.impact,
-            githubUrl: created.github_url ?? created.githubUrl,
-            demoUrl: created.demo_url ?? created.demoUrl,
-            status: created.status,
-            featured: created.featured,
-            startDate: created.startDate ?? created.start_date ?? null,
-            endDate: created.endDate ?? created.end_date ?? null,
-          };
+          const normalized = normalizeProjectPayload(created);
           const updated = [normalized, ...projects];
           setProjects(updated);
           localStorage.setItem("deva_projects", JSON.stringify(updated));
           return;
         }
 
-        const backendPayload: any = {
+        const backendPayload: Record<string, unknown> = {
           ...p,
           thumbnail: p.image || undefined,
           long_description: p.longDescription || undefined,
@@ -471,28 +495,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         delete backendPayload.skillIds;
 
         const created = await apiCreateProject(backendPayload);
-        const normalized: Project = {
-          id: String(created.id),
-          title: created.title,
-          category: created.category,
-          description: created.description,
-          skillIds: (created.skillIds ?? []).map(String),
-          skillNames: (created.skillNames ?? []),
-          image: formatImageUrl(created.image),
-          images: (created.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
-          longDescription: created.long_description ?? created.longDescription,
-          projectRole: created.projectRole ?? created.project_role,
-          problem: created.problem,
-          solution: created.solution,
-          keyFeatures: created.keyFeatures ?? created.key_features ?? [],
-          impact: created.impact,
-          githubUrl: created.github_url ?? created.githubUrl,
-          demoUrl: created.demo_url ?? created.demoUrl,
-          status: created.status,
-          featured: created.featured,
-          startDate: created.startDate ?? created.start_date ?? null,
-          endDate: created.endDate ?? created.end_date ?? null,
-        };
+        const normalized = normalizeProjectPayload(created);
         const updated = [normalized, ...projects];
         setProjects(updated);
         localStorage.setItem("deva_projects", JSON.stringify(updated));
@@ -512,7 +515,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     if (isAdminLogged()) {
       try {
         // support optional file upload via thumbnailFile
-        if ((p as any).thumbnailFile || ((p as any).galleryFiles ?? []).length > 0) {
+        if (p.thumbnailFile || (p.galleryFiles ?? []).length > 0) {
           const fd = new FormData();
           if (p.title) fd.append("title", p.title);
           if (p.category) fd.append("category", p.category);
@@ -531,34 +534,13 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           if (p.status) fd.append("status", p.status);
           fd.append("featured", p.featured ? "1" : "0");
           (p.imageUrls ?? []).forEach((url) => fd.append("image_urls[]", url));
-          ((p as any).galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
-          ((p as any).deletedImageIds ?? []).forEach((id: string) => fd.append("deleted_image_ids[]", id));
-          const file = (p as any).thumbnailFile as File | undefined;
+          (p.galleryFiles ?? []).forEach((file: File) => fd.append("images[]", file));
+          (p.deletedImageIds ?? []).forEach((id: string) => fd.append("deleted_image_ids[]", id));
+          const file = p.thumbnailFile as File | undefined;
           if (file) fd.append("thumbnail", file);
 
           const updatedProject = await apiUpdateProjectFormData(id, fd);
-          const normalized: Project = {
-            id: String(updatedProject.id),
-            title: updatedProject.title,
-            category: updatedProject.category,
-            description: updatedProject.description,
-            skillIds: (updatedProject.skillIds ?? []).map(String),
-            skillNames: (updatedProject.skillNames ?? []),
-            image: formatImageUrl(updatedProject.image),
-            images: (updatedProject.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
-            longDescription: updatedProject.long_description ?? updatedProject.longDescription,
-            projectRole: updatedProject.projectRole ?? updatedProject.project_role,
-            problem: updatedProject.problem,
-            solution: updatedProject.solution,
-            keyFeatures: updatedProject.keyFeatures ?? updatedProject.key_features ?? [],
-            impact: updatedProject.impact,
-            githubUrl: updatedProject.github_url ?? updatedProject.githubUrl,
-            demoUrl: updatedProject.demo_url ?? updatedProject.demoUrl,
-            status: updatedProject.status,
-            featured: updatedProject.featured,
-            startDate: updatedProject.startDate ?? updatedProject.start_date ?? null,
-            endDate: updatedProject.endDate ?? updatedProject.end_date ?? null,
-          };
+          const normalized = normalizeProjectPayload(updatedProject);
           const updated = projects.map(item => (item.id === id ? { ...item, ...normalized } : item));
           setProjects(updated);
           localStorage.setItem("deva_projects", JSON.stringify(updated));
@@ -585,28 +567,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         };
 
         const updatedProject = await apiUpdateProject(id, backendPayload);
-        const normalized: Project = {
-          id: String(updatedProject.id),
-          title: updatedProject.title,
-          category: updatedProject.category,
-          description: updatedProject.description,
-          skillIds: (updatedProject.skillIds ?? []).map(String),
-          skillNames: (updatedProject.skillNames ?? []),
-          image: formatImageUrl(updatedProject.image),
-          images: (updatedProject.images ?? []).map((img: any) => ({ ...img, image: formatImageUrl(img.image) })),
-          longDescription: updatedProject.long_description ?? updatedProject.longDescription,
-          projectRole: updatedProject.projectRole ?? updatedProject.project_role,
-          problem: updatedProject.problem,
-          solution: updatedProject.solution,
-          keyFeatures: updatedProject.keyFeatures ?? updatedProject.key_features ?? [],
-          impact: updatedProject.impact,
-          githubUrl: updatedProject.github_url ?? updatedProject.githubUrl,
-          demoUrl: updatedProject.demo_url ?? updatedProject.demoUrl,
-          status: updatedProject.status,
-          featured: updatedProject.featured,
-          startDate: updatedProject.startDate ?? updatedProject.start_date ?? null,
-          endDate: updatedProject.endDate ?? updatedProject.end_date ?? null,
-        };
+        const normalized = normalizeProjectPayload(updatedProject);
         const updated = projects.map(item => (item.id === id ? { ...item, ...normalized } : item));
         setProjects(updated);
         localStorage.setItem("deva_projects", JSON.stringify(updated));
@@ -701,7 +662,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const addExperience = async (e: Omit<Experience, "id"> & { certificateFile?: File | null }) => {
     if (isAdminLogged()) {
       try {
-        const payload: any = {
+        const payload: Record<string, unknown> = {
           company: e.company,
           position: e.position,
           description: e.description,
@@ -710,7 +671,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           is_current: e.isCurrent,
         };
 
-        let created: any;
+        let created: ApiExperience;
         if (e.certificateFile) {
           const fd = new FormData();
           fd.append("company", e.company);
@@ -726,14 +687,14 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         }
 
         const normalized: Experience = {
-          id: String(created.id ?? created.data?.id ?? Date.now()),
-          company: created.company ?? created.data?.company ?? e.company,
-          position: created.position ?? created.data?.position ?? e.position,
-          description: created.description ?? created.data?.description ?? e.description,
-          startDate: created.start_date ?? created.data?.start_date ?? e.startDate,
-          endDate: created.end_date ?? created.data?.end_date ?? e.endDate ?? null,
-          isCurrent: Boolean(created.is_current ?? created.data?.is_current ?? e.isCurrent),
-          certificate: created.certificate ?? created.data?.certificate ?? null,
+          id: String(created.id ?? Date.now()),
+          company: created.company ?? e.company,
+          position: created.position ?? e.position,
+          description: created.description ?? e.description,
+          startDate: created.start_date ?? e.startDate,
+          endDate: created.end_date ?? e.endDate ?? null,
+          isCurrent: Boolean(created.is_current ?? e.isCurrent),
+          certificate: created.certificate ?? null,
         };
 
         const updated = [normalized, ...experiences];
@@ -754,7 +715,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const updateExperience = async (id: string, e: Partial<Experience> & { certificateFile?: File | null }) => {
     if (isAdminLogged()) {
       try {
-        let updatedBackend: any;
+        let updatedBackend: ApiExperience;
         if (e.certificateFile) {
           const fd = new FormData();
           if (e.company !== undefined) fd.append("company", e.company);
@@ -766,7 +727,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           fd.append("certificate", e.certificateFile);
           updatedBackend = await apiUpdateExperienceFormData(id, fd);
         } else {
-          const payload: any = {
+          const payload: Record<string, unknown> = {
             company: e.company,
             position: e.position,
             description: e.description,
@@ -778,13 +739,13 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         }
 
         const normalized: Partial<Experience> = {
-          company: updatedBackend.company ?? updatedBackend.data?.company ?? e.company,
-          position: updatedBackend.position ?? updatedBackend.data?.position ?? e.position,
-          description: updatedBackend.description ?? updatedBackend.data?.description ?? e.description,
-          startDate: updatedBackend.start_date ?? updatedBackend.data?.start_date ?? e.startDate,
-          endDate: updatedBackend.end_date ?? updatedBackend.data?.end_date ?? e.endDate ?? null,
-          isCurrent: Boolean(updatedBackend.is_current ?? updatedBackend.data?.is_current ?? e.isCurrent),
-          certificate: updatedBackend.certificate ?? updatedBackend.data?.certificate ?? e.certificate,
+          company: updatedBackend.company ?? e.company,
+          position: updatedBackend.position ?? e.position,
+          description: updatedBackend.description ?? e.description,
+          startDate: updatedBackend.start_date ?? e.startDate,
+          endDate: updatedBackend.end_date ?? e.endDate ?? null,
+          isCurrent: Boolean(updatedBackend.is_current ?? e.isCurrent),
+          certificate: updatedBackend.certificate ?? e.certificate,
         };
 
         const updated = experiences.map(item => (item.id === id ? { ...item, ...normalized } as Experience : item));
@@ -827,8 +788,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         if (c.date) fd.append("date", c.date);
         if (c.expiresDate) fd.append("expires_date", c.expiresDate);
         if (c.credentialUrl) fd.append("credential_url", c.credentialUrl);
-        if ((c as any).imageFile) {
-          fd.append("image", (c as any).imageFile as File);
+        if (c.imageFile) {
+          fd.append("image", c.imageFile as File);
         }
 
         const created = await apiCreateCertificateFormData(fd);
@@ -867,8 +828,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         if (c.date) fd.append("date", c.date);
         if (c.expiresDate !== undefined) fd.append("expires_date", c.expiresDate ?? "");
         if (c.credentialUrl !== undefined) fd.append("credential_url", c.credentialUrl ?? "");
-        if ((c as any).imageFile) {
-          fd.append("image", (c as any).imageFile as File);
+        if (c.imageFile) {
+          fd.append("image", c.imageFile as File);
         }
 
         const updatedBackend = await apiUpdateCertificateFormData(id, fd);
@@ -931,8 +892,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
         const savedMessage: Message = {
           ...newMessage,
-          id: data?.id ? String(data.id) : newMessage.id,
-          date: data?.created_at ?? newMessage.date,
+          id: data?.data?.id ? String(data.data.id) : newMessage.id,
+          date: data?.data?.created_at ?? newMessage.date,
         };
 
         const updated = [savedMessage, ...messages];

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCMS } from "@/services/cmsContext";
-import { GitBranch, ExternalLink, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 
 export default function ProjectsPage() {
   const { projects } = useCMS();

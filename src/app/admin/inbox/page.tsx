@@ -4,7 +4,7 @@ import React, { useState, useMemo } from "react";
 import { useCMS, Message } from "@/services/cmsContext";
 
 export default function AdminInboxPage() {
-  const { messages, markMessageRead, markMessageReplied, deleteMessage, sendReply } = useCMS();
+  const { messages, markMessageRead, deleteMessage, sendReply } = useCMS();
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");

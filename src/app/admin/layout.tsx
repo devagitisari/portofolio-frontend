@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -9,6 +9,27 @@ import { Loader2, User } from "lucide-react";
 import { useCMS } from "@/services/cmsContext";
 import { useTheme } from "@/services/themeContext";
 import { ToastProvider } from "@/services/toastContext";
+
+type AuthStatus = "checking" | "authenticated" | "anonymous";
+
+/** The session lives in the browser, so it is read as an external store. */
+function subscribeToAuth() {
+  return () => {};
+}
+
+function getAuthSnapshot(): AuthStatus {
+  if (typeof window === "undefined") return "checking";
+
+  const loggedIn =
+    sessionStorage.getItem("deva_admin_logged") === "true" ||
+    Boolean(localStorage.getItem("deva_auth_token"));
+
+  return loggedIn ? "authenticated" : "anonymous";
+}
+
+function getAuthServerSnapshot(): AuthStatus {
+  return "checking";
+}
 
 export default function AdminLayout({
   children,
@@ -23,27 +44,21 @@ export default function AdminLayout({
   const unreadCount = messages.filter((m) => !m.read).length;
 
   // Initialize directly from storage to avoid flicker on navigation
-  const [authChecked, setAuthChecked] = useState(false);
+  const authStatus = useSyncExternalStore(subscribeToAuth, getAuthSnapshot, getAuthServerSnapshot);
 
   useEffect(() => {
-    const isLogged =
-      sessionStorage.getItem("deva_admin_logged") === "true" ||
-      !!localStorage.getItem("deva_auth_token");
-
-    if (!isLogged) {
-      router.push("/admin-login");
-    } else {
-      if (!sessionStorage.getItem("deva_admin_logged")) {
-        sessionStorage.setItem("deva_admin_logged", "true");
-      }
-      setAuthChecked(true);
+    if (authStatus === "anonymous") {
+      router.replace("/admin-login");
+      return;
     }
-    // Run only once on mount — do NOT include pathname or router in deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    if (authStatus === "authenticated" && !sessionStorage.getItem("deva_admin_logged")) {
+      sessionStorage.setItem("deva_admin_logged", "true");
+    }
+  }, [authStatus, router]);
 
   // Loading state during auth checks to prevent flash content
-  if (!authChecked) {
+  if (authStatus !== "authenticated") {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center text-on-surface-variant">
         <Loader2 size={36} className="animate-spin text-primary mb-4" />

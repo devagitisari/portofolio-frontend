@@ -98,14 +98,14 @@ export default function AdminProjectsPage() {
 
     if (editingId) {
       const f = fileMap[editingId];
-      if (f) (payload as any).thumbnailFile = f;
-      (payload as any).galleryFiles = galleryFileMap[editingId] ?? [];
-      (payload as any).deletedImageIds = Array.from(deletedImageIds);
+      if (f) payload.thumbnailFile = f;
+      payload.galleryFiles = galleryFileMap[editingId] ?? [];
+      payload.deletedImageIds = Array.from(deletedImageIds);
       await updateProject(editingId, payload);
     } else {
       const f = fileMap["new_file"];
-      if (f) (payload as any).thumbnailFile = f;
-      (payload as any).galleryFiles = galleryFileMap["new_file"] ?? [];
+      if (f) payload.thumbnailFile = f;
+      payload.galleryFiles = galleryFileMap["new_file"] ?? [];
       await addProject(payload);
     }
 
@@ -150,15 +150,6 @@ export default function AdminProjectsPage() {
       setSelectedProjects(new Set());
     } else {
       setSelectedProjects(new Set(filteredProjects.map((p) => p.id)));
-    }
-  };
-
-  // Bulk delete projects
-  const handleBulkDelete = () => {
-    if (selectedProjects.size === 0) return;
-    if (confirm(`Are you sure you want to delete ${selectedProjects.size} project(s)?`)) {
-      selectedProjects.forEach((id) => deleteProject(id));
-      setSelectedProjects(new Set());
     }
   };
 
@@ -562,13 +553,18 @@ export default function AdminProjectsPage() {
                             key={skill.id}
                             type="button"
                             onClick={() => {
-                              const currentIds = form.skillIds ?? [];
                               const sid = String(skill.id);
-                              if (isSelected) {
-                                setForm({ ...form, skillIds: currentIds.filter((id) => id !== sid) });
-                              } else {
-                                setForm({ ...form, skillIds: [...currentIds, sid] });
-                              }
+                              // Functional update so quick clicks don't lose a selection.
+                              setForm((prev) => {
+                                const currentIds = prev.skillIds ?? [];
+                                const selected = currentIds.includes(sid);
+                                return {
+                                  ...prev,
+                                  skillIds: selected
+                                    ? currentIds.filter((id) => id !== sid)
+                                    : [...currentIds, sid],
+                                };
+                              });
                             }}
                             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${isSelected
                               ? "bg-tertiary/20 text-tertiary border-tertiary/40 shadow-[0_0_8px_rgba(139,92,246,0.15)]"
@@ -733,7 +729,7 @@ export default function AdminProjectsPage() {
           <div className="col-span-12 text-center py-16">
             <div className="flex flex-col items-center gap-4">
               <span className="material-symbols-outlined text-6xl text-on-surface-variant opacity-50">search_off</span>
-              <p className="text-on-surface-variant font-medium">No projects found matching "{searchQuery}"</p>
+              <p className="text-on-surface-variant font-medium">No projects found matching &quot;{searchQuery}&quot;</p>
               <button
                 onClick={() => setSearchQuery("")}
                 className="px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-bold hover:shadow-[0_0_15px_rgba(255,105,180,0.3)] transition-all cursor-pointer"

@@ -191,7 +191,7 @@ export default function AdminExperiencesPage() {
                                     className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary rounded-lg px-4 py-2 text-sm text-on-surface outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20"
                                 />
                                 {editingId && experiences.find((e) => e.id === editingId)?.certificate && (
-                                    <p className="text-[10px] text-on-surface-variant mt-1">Current: <a href={experiences.find((e) => e.id === editingId)?.certificate!} target="_blank" rel="noreferrer" className="text-primary hover:underline">View Certificate</a> (Uploading a new file will replace this)</p>
+                                    <p className="text-[10px] text-on-surface-variant mt-1">Current: <a href={experiences.find((e) => e.id === editingId)?.certificate ?? "#"} target="_blank" rel="noreferrer" className="text-primary hover:underline">View Certificate</a> (Uploading a new file will replace this)</p>
                                 )}
                             </div>
 
@@ -234,7 +234,7 @@ export default function AdminExperiencesPage() {
                 <div className="admin-glass-card rounded-2xl p-16 text-center text-on-surface-variant">
                     <span className="material-symbols-outlined text-[64px] opacity-30 mb-4 block">history</span>
                     <p className="font-sans text-lg font-bold text-on-surface mb-2">No experiences yet</p>
-                    <p className="text-sm">Click "Add Experience" to add your first entry.</p>
+                    <p className="text-sm">Click &quot;Add Experience&quot; to add your first entry.</p>
                 </div>
             ) : (
                 <div className="relative">

@@ -315,24 +315,15 @@ export default function AdminSkillsPage() {
                 </select>
               </div>
 
-              {(() => {
-                const categoryColor = form.category === "Language" ? "primary" : form.category === "Framework" ? "tertiary" : "secondary";
-                const badgeIcon = form.category === "Language" ? "terminal" : form.category === "Framework" ? "layers" : "dns";
-
-                return (
-                  <>
-                    <div className="space-y-1 pt-2 p-4 rounded-lg bg-secondary/5 border border-secondary/20">
-                      <div className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider mb-2 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-xs">info</span>
-                        Auto-calculated percentage
-                      </div>
-                      <p className="text-xs text-on-surface-variant leading-relaxed">
-                        Percentages are now automatically calculated based on how many projects use this skill. The more projects that use a skill, the higher the percentage. You no longer need to manually set proficiency levels.
-                      </p>
-                    </div>
-                  </>
-                );
-              })()}
+              <div className="space-y-1 pt-2 p-4 rounded-lg bg-secondary/5 border border-secondary/20">
+                <div className="text-[10px] font-mono text-on-surface-variant uppercase font-bold tracking-wider mb-2 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-xs">info</span>
+                  Auto-calculated percentage
+                </div>
+                <p className="text-xs text-on-surface-variant leading-relaxed">
+                  Percentages are now automatically calculated based on how many projects use this skill. The more projects that use a skill, the higher the percentage. You no longer need to manually set proficiency levels.
+                </p>
+              </div>
 
               <div className="flex gap-2 pt-4 select-none">
                 {editingId && (

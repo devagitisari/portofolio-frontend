@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCMS } from "@/services/cmsContext";
 import { getAnalyticsOverview } from "@/services/backendApi";
+import type { ApiAnalyticsOverview } from "@/services/apiTypes";
 
 export default function AdminDashboard() {
   const { projects, skills, messages, certificates } = useCMS();
-  const [analytics, setAnalytics] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<ApiAnalyticsOverview | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [systemOnline, setSystemOnline] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
@@ -54,13 +55,19 @@ export default function AdminDashboard() {
     return Math.min(projectsUsingSkill * 20, 100);
   };
 
-  // Get top 8 skills based on calculated percentage for trending skills
-  // Only show skills that are used in projects (project_count > 0)
-  const topSkills = [...skills]
-    .filter(skill => (skill.projectCount ?? 0) > 0)
+  // Get top 8 skills based on calculated percentage for trending skills.
+  // Skills used in projects come first; when no skill is linked to a project
+  // yet the manually configured percentage is used so the list is never empty.
+  const usedSkills = skills.filter((skill) => (skill.projectCount ?? 0) > 0);
+  const skillPool = usedSkills.length > 0 ? usedSkills : skills;
+
+  const topSkills = [...skillPool]
     .map(skill => ({
       ...skill,
-      calculatedPercentage: calculatePercentage(skill.name)
+      calculatedPercentage:
+        (skill.projectCount ?? 0) > 0
+          ? calculatePercentage(skill.name)
+          : skill.percentage ?? skill.calculatedPercentage ?? 0,
     }))
     .sort((a, b) => b.calculatedPercentage - a.calculatedPercentage)
     .slice(0, 8);
@@ -75,7 +82,7 @@ export default function AdminDashboard() {
             Dashboard
           </h2>
           <p className="text-on-surface-variant mt-1 text-sm">
-            Welcome back! Here's your portfolio overview.
+            Welcome back! Here&apos;s your portfolio overview.
           </p>
         </div>
         <div className="text-right">
@@ -110,7 +117,7 @@ export default function AdminDashboard() {
             {projects.length}
           </h3>
           <p className="text-[9px] md:text-[10px] text-on-surface-variant mt-2">
-            {projects.filter((p: any) => p.status === 'published').length} published
+            {projects.filter((p) => p.status === 'published').length} published
           </p>
         </div>
 
@@ -128,10 +135,10 @@ export default function AdminDashboard() {
             Core Skills
           </p>
           <h3 className="text-[20px] md:text-[28px] font-extrabold text-on-surface mt-1 leading-none">
-            {skills.filter(s => (s.projectCount ?? 0) > 0).length}
+            {skills.length}
           </h3>
           <p className="text-[9px] md:text-[10px] text-on-surface-variant mt-2">
-            Across {new Set(skills.filter((s: any) => (s.projectCount ?? 0) > 0).map((s: any) => s.category)).size} categories
+            Across {new Set(skills.map((s) => s.category)).size} categories
           </p>
         </div>
 
@@ -158,7 +165,7 @@ export default function AdminDashboard() {
             {messages.length}
           </h3>
           <p className="text-[9px] md:text-[10px] text-on-surface-variant mt-2">
-            {messages.filter((m: any) => m.replied).length} replied
+            {messages.filter((m) => m.replied).length} replied
           </p>
         </div>
 
@@ -275,7 +282,7 @@ export default function AdminDashboard() {
                   ) : (
                     <tr>
                       <td colSpan={4} className="px-4 md:px-6 py-6 md:py-8 text-center text-on-surface-variant font-medium text-xs md:text-sm">
-                        No projects available yet. Click "View All" to create one.
+                        No projects available yet. Click &quot;View All&quot; to create one.
                       </td>
                     </tr>
                   )}

@@ -2,10 +2,10 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Award, ExternalLink, ArrowRight } from "lucide-react";
+import { Award, ExternalLink } from "lucide-react";
 import { useCMS } from "@/services/cmsContext";
 import Link from "next/link";
-import PDFPreview from "@/components/PDFPreview";
+import PDFPreview from "@/components/pdf/PDFPreview";
 
 export default function CertificatesPage() {
   const { certificates } = useCMS();

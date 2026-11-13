@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useCMS } from "@/services/cmsContext";
 import { User } from "lucide-react";
 import {
@@ -12,7 +12,14 @@ import {
   revokeSession,
   toggleTwoFactor,
 } from "@/services/backendApi";
+import type { ApiSession } from "@/services/apiTypes";
 // Settings page config
+
+interface AdminSession extends ApiSession {
+  isCurrent: boolean;
+  lastUsedAt: string | null;
+  createdAt: string | null;
+}
 
 export default function AdminSettingsPage() {
   const { settings, updateSettings, skills, projects } = useCMS();
@@ -55,8 +62,6 @@ export default function AdminSettingsPage() {
   // Files & Previews states
   const [profileFile, setProfileFile] = useState<File | null>(null);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
-  const [resumePreview, setResumePreview] = useState<string | null>(null);
 
   // Status states
   const [saving, setSaving] = useState(false);
@@ -69,15 +74,20 @@ export default function AdminSettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [securityProcessing, setSecurityProcessing] = useState(false);
-  const [activeSessions, setActiveSessions] = useState<any[]>([]);
+  const [activeSessions, setActiveSessions] = useState<AdminSession[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [sessionsError, setSessionsError] = useState<string | null>(null);
   const [showAllDevices, setShowAllDevices] = useState(false);
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [twoFactorProcessing, setTwoFactorProcessing] = useState(false);
 
-  // Sync state values when settings context loads
-  useEffect(() => {
+  // Sync state values when the settings context changes.
+  // Done during render (React's "derive state from props" pattern) instead of
+  // inside an effect, which would trigger an extra render pass.
+  const [syncedSettings, setSyncedSettings] = useState(settings);
+
+  if (settings !== syncedSettings) {
+    setSyncedSettings(settings);
     setName(settings.name || "");
     setEmail(settings.email || "");
     setTitle(settings.title || "");
@@ -91,10 +101,15 @@ export default function AdminSettingsPage() {
     setShowGitHubActivity(settings.showGitHubActivity);
     setBio(settings.bio || "");
     setAboutMe(settings.aboutMe || "");
-  }, [settings]);
+    setMetaTitle(settings.metaTitle || "");
+    setMetaDescription(settings.metaDescription || "");
+    setMetaKeywords(settings.metaKeywords || "");
+    setOgTitle(settings.ogTitle || "");
+    setOgDescription(settings.ogDescription || "");
+    setOgImage(settings.ogImage || "");
+  }
 
   const loadSecurityData = async () => {
-    setSessionsLoading(true);
     setSessionsError(null);
 
     try {
@@ -102,7 +117,7 @@ export default function AdminSettingsPage() {
       const sessionData = response?.sessions ?? [];
       const currentId = response?.currentTokenId;
       setActiveSessions(
-        sessionData.map((session: any) => ({
+        sessionData.map((session) => ({
           ...session,
           isCurrent: session.id === currentId,
           lastUsedAt: session.last_used_at,
@@ -110,42 +125,70 @@ export default function AdminSettingsPage() {
         }))
       );
       setTwoFactorEnabled(Boolean(response?.twoFactorEnabled));
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setSessionsError(error?.message || "Unable to load active sessions.");
+      setSessionsError(error instanceof Error ? error.message : "Unable to load active sessions.");
     } finally {
       setSessionsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadSecurityData();
-  }, []);
+    let cancelled = false;
 
-  // Handle files change and create local previews
-  useEffect(() => {
-    let profileUrl: string | null = null;
-    let resumeUrlLocal: string | null = null;
-
-    if (profileFile) {
-      profileUrl = URL.createObjectURL(profileFile);
-      setProfilePreview(profileUrl);
-    } else {
-      setProfilePreview(profileImage || null);
-    }
-
-    if (resumeFile) {
-      resumeUrlLocal = URL.createObjectURL(resumeFile);
-      setResumePreview(resumeUrlLocal);
-    } else {
-      setResumePreview(resumeUrl || null);
-    }
+    (async () => {
+      try {
+        const response = await getActiveSessions();
+        if (cancelled) return;
+        const sessionData = response?.sessions ?? [];
+        const currentId = response?.currentTokenId;
+        setActiveSessions(
+          sessionData.map((session) => ({
+            ...session,
+            isCurrent: session.id === currentId,
+            lastUsedAt: session.last_used_at,
+            createdAt: session.created_at,
+          }))
+        );
+        setTwoFactorEnabled(Boolean(response?.twoFactorEnabled));
+      } catch (error) {
+        if (cancelled) return;
+        console.error(error);
+        setSessionsError(error instanceof Error ? error.message : "Unable to load active sessions.");
+      } finally {
+        if (!cancelled) setSessionsLoading(false);
+      }
+    })();
 
     return () => {
-      if (profileUrl) URL.revokeObjectURL(profileUrl);
-      if (resumeUrlLocal) URL.revokeObjectURL(resumeUrlLocal);
+      cancelled = true;
     };
-  }, [profileFile, resumeFile, profileImage, resumeUrl]);
+  }, []);
+
+  // Object URLs for the local previews — revoked when they are replaced.
+  const profileObjectUrl = useMemo(
+    () => (profileFile ? URL.createObjectURL(profileFile) : null),
+    [profileFile]
+  );
+
+  const resumeObjectUrl = useMemo(
+    () => (resumeFile ? URL.createObjectURL(resumeFile) : null),
+    [resumeFile]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (profileObjectUrl) URL.revokeObjectURL(profileObjectUrl);
+    };
+  }, [profileObjectUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeObjectUrl) URL.revokeObjectURL(resumeObjectUrl);
+    };
+  }, [resumeObjectUrl]);
+
+  const profilePreview = profileObjectUrl ?? (profileImage || null);
 
   const handleResumeFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -196,20 +239,20 @@ export default function AdminSettingsPage() {
         try {
           const s = await apiGetSettings();
           await updateSettings({
-            name: s.name ?? s.site_name,
-            title: s.title ?? s.tagline,
-            email: s.email,
-            whatsapp: s.whatsapp,
-            github: s.github,
-            linkedin: s.linkedin,
-            profileImage: s.profileImage,
-            resumeUrl: s.resumeUrl,
-            gpa: s.gpa,
+            name: s.name ?? s.site_name ?? "",
+            title: s.title ?? s.tagline ?? "",
+            email: s.email ?? "",
+            whatsapp: s.whatsapp ?? "",
+            github: s.github ?? "",
+            linkedin: s.linkedin ?? "",
+            profileImage: s.profileImage ?? null,
+            resumeUrl: s.resumeUrl ?? "",
+            gpa: s.gpa ?? "",
             completedProjects: Number(s.completedProjects ?? s.completed_projects ?? 0),
             autoUpdateSkillBadges: Boolean(s.autoUpdateSkillBadges ?? s.auto_update_skill_badges ?? true),
             showGitHubActivity: Boolean(s.showGitHubActivity ?? s.show_github_activity ?? true),
-            bio: s.bio,
-            aboutMe: s.aboutMe ?? s.about_me,
+            bio: s.bio ?? "",
+            aboutMe: s.aboutMe ?? s.about_me ?? "",
           }, true);
         } catch (err) {
           console.warn("Failed to refresh settings after upload", err);
@@ -272,9 +315,9 @@ export default function AdminSettingsPage() {
       setNewPassword("");
       setConfirmPassword("");
       setShowPasswordForm(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setSecurityError(error?.message || "Failed to update password.");
+      setSecurityError(error instanceof Error ? error.message : "Failed to update password.");
     } finally {
       setSecurityProcessing(false);
     }
@@ -289,9 +332,9 @@ export default function AdminSettingsPage() {
       const response = await revokeSessions();
       setSecurityStatus(response.message || "All other sessions have been signed out.");
       await loadSecurityData();
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setSecurityError(error?.message || "Failed to sign out of other devices.");
+      setSecurityError(error instanceof Error ? error.message : "Failed to sign out of other devices.");
     } finally {
       setSecurityProcessing(false);
     }
@@ -306,9 +349,9 @@ export default function AdminSettingsPage() {
       const response = await toggleTwoFactor(!twoFactorEnabled);
       setTwoFactorEnabled(response.twoFactorEnabled);
       setSecurityStatus(response.message || "Two-factor authentication setting updated.");
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setSecurityError(error?.message || "Unable to update two-factor authentication.");
+      setSecurityError(error instanceof Error ? error.message : "Unable to update two-factor authentication.");
     } finally {
       setTwoFactorProcessing(false);
     }
@@ -323,9 +366,9 @@ export default function AdminSettingsPage() {
       const response = await revokeSession(tokenId);
       setSecurityStatus(response.message || "Session revoked successfully.");
       await loadSecurityData();
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      setSecurityError(error?.message || "Unable to revoke session.");
+      setSecurityError(error instanceof Error ? error.message : "Unable to revoke session.");
     } finally {
       setSecurityProcessing(false);
     }
@@ -351,7 +394,7 @@ export default function AdminSettingsPage() {
 
       {saveError && (
         <div className="p-4 bg-[#93000a]/20 border border-[#93000a]/40 text-[#ffdad6] rounded-xl mb-6">
-          <div className="font-bold mb-2 text-sm">❌ Error:</div>
+          <div className="font-bold mb-2 text-sm">⚠ Error:</div>
           <div className="text-xs whitespace-pre-wrap font-mono bg-black/40 p-2 rounded">
             {saveError}
           </div>
@@ -556,11 +599,11 @@ export default function AdminSettingsPage() {
                   <div className="space-y-2">
                     <span className="block text-[10px] font-mono uppercase tracking-wider text-on-surface-variant pl-1 font-bold">Full-Stack Projects</span>
                     <div className="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface flex items-center min-h-[44px]">
-                      <span className="font-semibold">{projects?.filter((p: any) => {
+                      <span className="font-semibold">{projects?.filter((p) => {
                         const skillNames = p.skillNames ?? [];
-                        const hasLanguage = skills.some((s: any) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Language");
-                        const hasFramework = skills.some((s: any) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Framework");
-                        const hasOther = skills.some((s: any) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Other");
+                        const hasLanguage = skills.some((s) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Language");
+                        const hasFramework = skills.some((s) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Framework");
+                        const hasOther = skills.some((s) => skillNames.some((sn: string) => sn.toLowerCase() === s.name.toLowerCase()) && s.category === "Other");
                         return hasLanguage && hasFramework && hasOther;
                       }).length ?? 0}</span>
                     </div>
@@ -730,7 +773,7 @@ export default function AdminSettingsPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {activeSessions.slice(0, showAllDevices ? undefined : 3).map((session: any) => (
+                {activeSessions.slice(0, showAllDevices ? undefined : 3).map((session) => (
                   <div key={session.id} className="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">
@@ -742,12 +785,12 @@ export default function AdminSettingsPage() {
                       )}
                     </div>
                     <div className="text-[10px] text-on-surface-variant font-mono">
-                      {session.ip_address || 'Unknown IP'} • {new Date(session.last_used_at).toLocaleDateString()}
+                      {session.ip_address || 'Unknown IP'} • {new Date(session.last_used_at ?? "").toLocaleDateString()}
                     </div>
                     {!session.isCurrent && (
                       <button
                         type="button"
-                        onClick={() => handleRevokeSession(session.id)}
+                        onClick={() => handleRevokeSession(String(session.id))}
                         disabled={securityProcessing}
                         className="mt-2 text-[10px] text-red-400 hover:text-red-300 font-semibold cursor-pointer disabled:opacity-50"
                       >
@@ -1006,7 +1049,7 @@ export default function AdminSettingsPage() {
               </div>
             ) : (
               <div className="space-y-3">
-                {activeSessions.slice(0, showAllDevices ? undefined : 3).map((session: any) => (
+                {activeSessions.slice(0, showAllDevices ? undefined : 3).map((session) => (
                   <div key={session.id} className="p-3 rounded-lg bg-surface-container-low border border-outline-variant/20">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">
@@ -1018,12 +1061,12 @@ export default function AdminSettingsPage() {
                       )}
                     </div>
                     <div className="text-[10px] text-on-surface-variant font-mono">
-                      {session.ip_address || 'Unknown IP'} • {new Date(session.last_used_at).toLocaleDateString()}
+                      {session.ip_address || 'Unknown IP'} • {new Date(session.last_used_at ?? "").toLocaleDateString()}
                     </div>
                     {!session.isCurrent && (
                       <button
                         type="button"
-                        onClick={() => handleRevokeSession(session.id)}
+                        onClick={() => handleRevokeSession(String(session.id))}
                         disabled={securityProcessing}
                         className="mt-2 text-[10px] text-red-400 hover:text-red-300 font-semibold cursor-pointer disabled:opacity-50"
                       >

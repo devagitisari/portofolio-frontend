@@ -97,7 +97,7 @@ export default function Sidebar() {
                             <motion.a
                                 key={link.name}
                                 {...linkProps}
-                                onClick={(e) => handleShare(e as any, link.url)}
+                                onClick={(e) => handleShare(e, link.url)}
                                 initial={{ opacity: 0, x: -8 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.15 + idx * 0.06, type: "spring" }}

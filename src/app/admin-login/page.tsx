@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCMS } from "@/services/cmsContext";
 
 import { login as apiLogin, setAuthToken } from "@/services/backendApi";
 import {
@@ -16,23 +15,15 @@ import {
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { settings } = useCMS();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    if (!mounted) return;
     if (email && password) {
       try {
         const res = await apiLogin(email, password);
@@ -42,8 +33,8 @@ export default function AdminLoginPage() {
         } else {
           setError("Failed to retrieve authentication token.");
         }
-      } catch (err: any) {
-        setError(err?.message || "The credentials provided are incorrect.");
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "The credentials provided are incorrect.");
       }
     } else {
       setError("Please provide both email and password.");

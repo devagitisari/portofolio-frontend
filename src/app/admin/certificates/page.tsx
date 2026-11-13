@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { useCMS, Certificate } from "@/services/cmsContext";
-import PDFPreview from "@/components/PDFPreview";
+import PDFPreview from "@/components/pdf/PDFPreview";
 
 
 export default function AdminCertificatesPage() {
@@ -97,7 +97,7 @@ export default function AdminCertificatesPage() {
         e.preventDefault();
         setSaving(true);
         try {
-            const payload: any = {
+            const payload: Omit<Certificate, "id"> = {
                 title: form.title,
                 issuer: form.issuer,
                 description: form.description || null,

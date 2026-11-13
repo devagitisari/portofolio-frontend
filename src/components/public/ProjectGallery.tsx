@@ -3,7 +3,12 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, X, Maximize2 } from "lucide-react";
 
-export default function ProjectGallery({ mainImage, screenshots }: { mainImage: string, screenshots: any[] }) {
+export interface GalleryImage {
+    id?: string | number;
+    image: string;
+}
+
+export default function ProjectGallery({ mainImage, screenshots }: { mainImage: string; screenshots: GalleryImage[] }) {
     // Combine main image and screenshots
     const allImages = mainImage
         ? [{ id: 'main', image: mainImage }, ...(screenshots || [])]
@@ -22,7 +27,7 @@ export default function ProjectGallery({ mainImage, screenshots }: { mainImage: 
         setCurrentIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
     };
 
-    const currentImage = allImages[currentIndex].image || allImages[currentIndex];
+    const currentImage = allImages[currentIndex].image;
 
     return (
         <>

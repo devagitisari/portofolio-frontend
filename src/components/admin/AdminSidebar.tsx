@@ -4,22 +4,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCMS } from "@/services/cmsContext";
 import { clearAuthStorage, logout as backendLogout } from "@/services/backendApi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AdminSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: { isMobileMenuOpen?: boolean; setIsMobileMenuOpen?: (open: boolean) => void } = {}) {
   const pathname = usePathname();
   const router = useRouter();
-  const { messages, settings } = useCMS();
-  const [mounted, setMounted] = useState(false);
+  const { messages } = useCMS();
   const [localMobileMenuOpen, setLocalMobileMenuOpen] = useState(false);
 
   // Use prop if provided, otherwise use local state
   const mobileMenuOpen = isMobileMenuOpen !== undefined ? isMobileMenuOpen : localMobileMenuOpen;
   const setMobileMenuOpen = setIsMobileMenuOpen || setLocalMobileMenuOpen;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Calculate unread messages count dynamically
   const unreadCount = messages.filter((m) => !m.read).length;
@@ -41,7 +36,6 @@ export default function AdminSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: 
   ];
 
   const handleLogout = async () => {
-    if (!mounted) return;
     try {
       await backendLogout();
     } catch (error) {

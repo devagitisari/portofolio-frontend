@@ -1,21 +1,24 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, GitBranch } from "lucide-react";
+import { ExternalLink, GitBranch } from "lucide-react";
 import ProjectGallery from "@/components/public/ProjectGallery";
 
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/$/, "") || "http://localhost:8000/api";
+import { BACKEND_API_URL } from "@/services/backendApi";
+import { currentApiBase } from "@/lib/api/serverOrigin";
+import type { ApiProject } from "@/services/apiTypes";
 
-async function getProject(slug: string) {
-    const response = await fetch(`${BACKEND_API_URL}/projects/${slug}`, {
-        next: { revalidate: 60 },
+async function getProject(slug: string, apiBase: string): Promise<ApiProject> {
+    const response = await fetch(`${apiBase}/projects/${slug}`, {
+        cache: "no-store",
     });
 
     if (!response.ok) {
         throw new Error("Project not found");
     }
 
-    const json = await response.json();
-    return json.data ?? json;
+    const json = (await response.json()) as { data?: ApiProject } | ApiProject;
+    if (Array.isArray(json)) return json[0] as ApiProject;
+    if ("data" in json && json.data) return json.data;
+    return json as ApiProject;
 }
 
 function formatDate(value?: string | null) {
@@ -31,10 +34,10 @@ export async function generateStaticParams() {
             next: { revalidate: 60 },
         });
         if (!response.ok) return [];
-        const json = await response.json();
-        const projects = json.data ?? json;
-        return (projects ?? []).map((project: any) => ({
-            slug: project.slug,
+        const json = (await response.json()) as { data?: ApiProject[] } | ApiProject[];
+        const projects = Array.isArray(json) ? json : json.data ?? [];
+        return projects.map((project) => ({
+            slug: project.slug ?? "",
         }));
     } catch {
         return [];
@@ -42,12 +45,13 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-    let project: any;
+    let project: ApiProject;
     const resolvedParams = await params;
+    const apiBase = await currentApiBase();
 
     try {
-        project = await getProject(resolvedParams.slug);
-    } catch (error) {
+        project = await getProject(resolvedParams.slug, apiBase);
+    } catch {
         notFound();
     }
 
@@ -70,7 +74,13 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 <div className="lg:col-span-7">
                     {/* Image Slider */}
-                    <ProjectGallery mainImage={project.image} screenshots={project.images} />
+                    <ProjectGallery
+                        mainImage={project.image ?? ""}
+                        screenshots={(project.images ?? []).map((image) => ({
+                            id: image.id,
+                            image: image.image ?? "",
+                        }))}
+                    />
 
                     <div className="mt-8 space-y-6">
                         <div className="glass-card p-6 rounded-2xl border border-white/10">

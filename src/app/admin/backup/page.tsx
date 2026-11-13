@@ -15,7 +15,7 @@ export default function BackupPage() {
     try {
       await exportBackup();
       setMessage({ type: 'success', text: 'Backup exported successfully!' });
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Failed to export backup' });
     } finally {
       setExporting(false);
@@ -34,7 +34,7 @@ export default function BackupPage() {
       setTimeout(() => {
         window.location.reload();
       }, 2000);
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Failed to import backup. Please check the file format.' });
     } finally {
       setImporting(false);

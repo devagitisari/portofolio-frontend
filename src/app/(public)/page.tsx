@@ -4,26 +4,25 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCMS } from "@/services/cmsContext";
+import { groupSkills, resolveSkillPercentage, skillGroup, visibleSkills } from "@/services/skillUtils";
 import { useTheme } from "@/services/themeContext";
-import { BACKEND_API_URL } from "@/services/backendApi";
-import PDFPreview from "@/components/PDFPreview";
+import { apiUrl } from "@/services/backendApi";
+import type { GitHubActivityEvent } from "@/services/backendApi";
+import PDFPreview from "@/components/pdf/PDFPreview";
 import {
   Code,
   Layers,
   Palette,
   ArrowRight,
   ArrowUpRight,
-  Smartphone,
-  Router,
   Check,
   User,
-  Award
 } from "lucide-react";
 
 export default function HomePage() {
   const { projects, skills, experiences, settings, certificates, addMessage } = useCMS();
   const { theme } = useTheme();
-  const [gitHubEvents, setGitHubEvents] = useState<any[]>([]);
+  const [gitHubEvents, setGitHubEvents] = useState<GitHubActivityEvent[]>([]);
 
   // Local states for interactive copy-paste
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", category: "General", message: "" });
@@ -37,7 +36,7 @@ export default function HomePage() {
   React.useEffect(() => {
     const fetchGitHubEvents = async () => {
       try {
-        const response = await fetch(`${BACKEND_API_URL}/github-activity`);
+        const response = await fetch(apiUrl("/github-activity"));
         if (response.ok) {
           const data = await response.json();
           if (data.data?.events) {
@@ -75,22 +74,15 @@ export default function HomePage() {
   // Helper function to check if a project is full-stack
   // Full-stack = has at least 1 language + 1 framework + 1 other/infrastructure skill
   const isFullStackProject = (projectSkills: string[]): boolean => {
-    const skillsByCategory = skills.reduce((acc, skill) => {
-      if (projectSkills.some(ps => ps.toLowerCase() === skill.name.toLowerCase())) {
-        if (!acc[skill.category]) {
-          acc[skill.category] = [];
-        }
-        acc[skill.category].push(skill.name);
-      }
-      return acc;
-    }, {} as Record<string, string[]>);
+    const groups = new Set<string>();
 
-    // Check if has at least one skill from each major category
-    const hasLanguage = (skillsByCategory["Language"] ?? []).length > 0;
-    const hasFramework = (skillsByCategory["Framework"] ?? []).length > 0;
-    const hasOther = (skillsByCategory["Other"] ?? []).length > 0;
+    for (const name of projectSkills) {
+      const skill = skills.find(item => item.name.toLowerCase() === name.toLowerCase());
+      const group = skillGroup(skill?.category);
+      if (group) groups.add(group);
+    }
 
-    return hasLanguage && hasFramework && hasOther;
+    return groups.has("language") && groups.has("framework") && groups.has("other");
   };
 
   // Calculate percentage based on project usage (max 5 projects = 100%)
@@ -103,20 +95,16 @@ export default function HomePage() {
     return Math.min(projectsUsingSkill * 20, 100);
   };
 
-  const languageSkills = skills.filter(
-    s => s.category === "Language" && ((s.projectCount ?? 0) > 0 || calculatePercentage(s.name) > 0)
-  );
-
-  const frameworkSkills = skills.filter(
-    s => s.category === "Framework" && ((s.projectCount ?? 0) > 0 || calculatePercentage(s.name) > 0)
-  );
-
-  const otherSkills = skills.filter(
-    s => s.category === "Other" && ((s.projectCount ?? 0) > 0 || calculatePercentage(s.name) > 0)
-  );
-
+  // Percentage to display: project usage first, the manual value as fallback
   const displayPercentage = (skill: typeof skills[number]) =>
-    calculatePercentage(skill.name);
+    resolveSkillPercentage(
+      { ...skill, calculatedPercentage: calculatePercentage(skill.name) },
+      projects
+    );
+
+  // Group skills by category (matched by keyword so any category naming works)
+  const { languages: languageSkills, frameworks: frameworkSkills, others: otherSkills } =
+    groupSkills(skills, projects);
 
   const githubUsername = (() => {
     const value = settings.github?.trim();
@@ -266,7 +254,7 @@ export default function HomePage() {
               <motion.div variants={fadeInUp} className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {[
                   { value: `${projects.length}`, label: "Projects Built", color: "text-primary" },
-                  { value: `${skills.filter(s => calculatePercentage(s.name) > 0).length}`, label: "Tech Stack Used", color: "text-tertiary" },
+                  { value: `${visibleSkills(skills, projects).length}`, label: "Tech Stack Used", color: "text-tertiary" },
                   { value: settings.gpa || "N/A", label: "GPA", color: "text-secondary" },
                   { value: `${projects.filter(p => isFullStackProject(p.skillNames ?? [])).length}`, label: "Full-Stack Solutions", color: "text-primary" },
                 ].map((item) => (
@@ -330,7 +318,7 @@ export default function HomePage() {
               <div className="animate-scroll gap-12 select-none">
                 {/* First loop of skills */}
                 <div className="flex gap-16 items-center px-6 grayscale opacity-45 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-                  {skills.filter(s => (s.projectCount ?? 0) > 0 || calculatePercentage(s.name) > 0).map((skill) => (
+                  {visibleSkills(skills, projects).map((skill) => (
                     <span key={`1-${skill.id}`} className="font-sans text-headline-md font-extrabold tracking-tighter text-on-surface-variant whitespace-nowrap">
                       {skill.name.toUpperCase()}
                     </span>
@@ -338,7 +326,7 @@ export default function HomePage() {
                 </div>
                 {/* Second loop for seamless marquee */}
                 <div className="flex gap-16 items-center px-6 grayscale opacity-45 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
-                  {skills.filter(s => (s.projectCount ?? 0) > 0 || calculatePercentage(s.name) > 0).map((skill) => (
+                  {visibleSkills(skills, projects).map((skill) => (
                     <span key={`2-${skill.id}`} className="font-sans text-headline-md font-extrabold tracking-tighter text-on-surface-variant whitespace-nowrap">
                       {skill.name.toUpperCase()}
                     </span>
@@ -909,7 +897,9 @@ export default function HomePage() {
                               {event.summary}
                             </p>
                             <span className="text-xs font-mono text-on-surface-variant">
-                              {new Date(event.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              {event.createdAt
+                                ? new Date(event.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                : ""}
                             </span>
                           </div>
                         </div>
@@ -928,7 +918,7 @@ export default function HomePage() {
                 <h3 className="font-sans text-body-lg font-bold text-on-background mb-6">Contribution Graph</h3>
                 <div className="glass-card rounded-3xl p-5 sm:p-8 overflow-x-auto">
                   <iframe
-                    src={`${BACKEND_API_URL}/github-contributions?v=7&theme=${theme}`}
+                    src={apiUrl(`/github-contributions?v=7&theme=${theme}`)}
                     title={`${githubUsername} GitHub contribution graph`}
                     className="mx-auto block h-[310px] min-w-[1010px] w-full rounded-xl border-0 bg-transparent"
                     loading="lazy"

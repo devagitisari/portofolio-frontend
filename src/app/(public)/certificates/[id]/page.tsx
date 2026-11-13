@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, Award } from "lucide-react";
-import { getCertificate, getCertificates } from "@/services/backendApi";
-import PDFPreview from "@/components/PDFPreview";
-
-const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL?.replace(/\/$/, "") || "http://localhost:8000/api";
+import { ExternalLink, Award } from "lucide-react";
+import { BACKEND_API_URL } from "@/services/backendApi";
+import { currentApiBase } from "@/lib/api/serverOrigin";
+import type { ApiCertificate } from "@/services/apiTypes";
+import PDFPreview from "@/components/pdf/PDFPreview";
 
 export async function generateStaticParams() {
     try {
@@ -12,9 +11,9 @@ export async function generateStaticParams() {
             next: { revalidate: 60 },
         });
         if (!response.ok) return [];
-        const json = await response.json();
-        const certificates = json.data ?? json;
-        return (certificates ?? []).map((cert: any) => ({
+        const json = (await response.json()) as { data?: ApiCertificate[] } | ApiCertificate[];
+        const certificates = Array.isArray(json) ? json : json.data ?? [];
+        return certificates.map((cert) => ({
             id: String(cert.id),
         }));
     } catch {
@@ -24,12 +23,17 @@ export async function generateStaticParams() {
 
 export default async function CertificateDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const resolvedParams = await params;
-    let cert: any;
+    const apiBase = await currentApiBase();
+    let cert: ApiCertificate;
 
     try {
-        cert = await getCertificate(resolvedParams.id);
-        console.log("Certificate data:", cert);
-    } catch (error) {
+        const response = await fetch(`${apiBase}/certificates/${resolvedParams.id}`);
+        if (!response.ok) {
+            notFound();
+        }
+        const json = (await response.json()) as { data?: ApiCertificate } | ApiCertificate;
+        cert = ("data" in json ? json.data : json) as ApiCertificate;
+    } catch {
         notFound();
     }
 
@@ -80,14 +84,14 @@ export default async function CertificateDetailPage({ params }: { params: Promis
                             <div className="flex items-center justify-between gap-4">
                                 <span className="text-label-mono text-on-surface-variant">Issue Date</span>
                                 <span className="font-semibold text-on-surface">
-                                    {(cert.date || cert.date_issue) ? new Date(cert.date || cert.date_issue).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "—"}
+                                    {(cert.date || cert.date_issue) ? new Date((cert.date || cert.date_issue) as string).toLocaleDateString("en-US", { month: "long", year: "numeric" }) : "—"}
                                 </span>
                             </div>
                             {(cert.expires_date || cert.expiresDate) && (
                                 <div className="flex items-center justify-between gap-4">
                                     <span className="text-label-mono text-on-surface-variant">Expires</span>
                                     <span className="font-semibold text-on-surface">
-                                        {new Date(cert.expires_date || cert.expiresDate).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                                        {new Date((cert.expires_date || cert.expiresDate) as string).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
                                     </span>
                                 </div>
                             )}
@@ -106,7 +110,7 @@ export default async function CertificateDetailPage({ params }: { params: Promis
                     {cert.credential_url && (
                         <div className="glass-card p-8 rounded-[2rem] border border-white/10 space-y-4">
                             <h3 className="font-sans text-headline-sm font-bold text-primary">Verification</h3>
-                            <a href={cert.credential_url || cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl border border-white/10 bg-tertiary/10 px-5 py-4 text-tertiary hover:bg-tertiary/20 transition-all">
+                            <a href={cert.credential_url || cert.credentialUrl || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl border border-white/10 bg-tertiary/10 px-5 py-4 text-tertiary hover:bg-tertiary/20 transition-all">
                                 <ExternalLink size={18} />
                                 <span>Verify Credential</span>
                             </a>

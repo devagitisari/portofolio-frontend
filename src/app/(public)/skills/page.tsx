@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useCMS } from "@/services/cmsContext";
+import { groupSkills, resolveSkillPercentage, skillGroup } from "@/services/skillUtils";
 import { Code, Layers, Palette, HelpCircle } from "lucide-react";
 
 export default function SkillsPage() {
@@ -21,34 +22,33 @@ export default function SkillsPage() {
   // Helper function to check if a project is full-stack
   // Full-stack = has at least 1 language + 1 framework + 1 other/infrastructure skill
   const isFullStackProject = (projectSkills: string[]): boolean => {
-    const skillsByCategory = skills.reduce((acc, skill) => {
-      if (projectSkills.some(ps => ps.toLowerCase() === skill.name.toLowerCase())) {
-        if (!acc[skill.category]) {
-          acc[skill.category] = [];
-        }
-        acc[skill.category].push(skill.name);
-      }
-      return acc;
-    }, {} as Record<string, string[]>);
+    const groups = new Set<string>();
 
-    // Check if has at least one skill from each major category
-    const hasLanguage = (skillsByCategory["Language"] ?? []).length > 0;
-    const hasFramework = (skillsByCategory["Framework"] ?? []).length > 0;
-    const hasOther = (skillsByCategory["Other"] ?? []).length > 0;
+    for (const name of projectSkills) {
+      const skill = skills.find(item => item.name.toLowerCase() === name.toLowerCase());
+      const group = skillGroup(skill?.category);
+      if (group) groups.add(group);
+    }
 
-    return hasLanguage && hasFramework && hasOther;
+    return groups.has("language") && groups.has("framework") && groups.has("other");
   };
 
-  // Enrich skills with calculated percentages
-  const enrichedSkills = skills.map(s => ({
-    ...s,
-    calculatedPercentage: calculatePercentage(s.name)
-  }));
+  // Enrich skills with the percentage that should be displayed:
+  // project usage first, the manually configured value as fallback.
+  const enrichedSkills = skills.map(s => {
+    const usagePercentage = calculatePercentage(s.name);
 
-  // Group skills dynamically by category (only show skills used in projects)
-  const languages = enrichedSkills.filter(s => s.category === "Language" && (s.calculatedPercentage ?? 0) > 0);
-  const frameworks = enrichedSkills.filter(s => s.category === "Framework" && (s.calculatedPercentage ?? 0) > 0);
-  const others = enrichedSkills.filter(s => s.category === "Other" && (s.calculatedPercentage ?? 0) > 0);
+    return {
+      ...s,
+      calculatedPercentage: resolveSkillPercentage(
+        { ...s, calculatedPercentage: usagePercentage },
+        projects
+      ),
+    };
+  });
+
+  // Group skills by category (matched by keyword so any category naming works)
+  const { languages, frameworks, others } = groupSkills(enrichedSkills, projects);
 
   // Animations
   const containerVariants = {
