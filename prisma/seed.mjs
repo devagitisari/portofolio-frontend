@@ -1,3 +1,11 @@
+/**
+ * Seeds the admin user.
+ *
+ * Plain JavaScript on purpose: the seed must run without any devDependency
+ * (tsx), so `prisma db seed` also works on a production install.
+ *
+ *   ADMIN_EMAIL=... ADMIN_PASSWORD=... node prisma/seed.mjs
+ */
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
