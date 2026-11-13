@@ -145,10 +145,10 @@ export default function HomePage() {
   return (
     <div className="relative">
 
-      {/* Background Decorative Blobs */}
+      {/* Background Decorative Blobs — pink + violet, dua warna yang saling melengkapi */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-secondary/5 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent-violet-10 blur-[120px] rounded-full"></div>
       </div>
 
       {/* 1. Hero Section */}
@@ -254,9 +254,9 @@ export default function HomePage() {
               <motion.div variants={fadeInUp} className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {[
                   { value: `${projects.length}`, label: "Projects Built", color: "text-primary" },
-                  { value: `${visibleSkills(skills, projects).length}`, label: "Tech Stack Used", color: "text-primary" },
+                  { value: `${visibleSkills(skills, projects).length}`, label: "Tech Stack Used", color: "text-accent-violet" },
                   { value: settings.gpa || "N/A", label: "GPA", color: "text-primary" },
-                  { value: `${projects.filter(p => isFullStackProject(p.skillNames ?? [])).length}`, label: "Full-Stack Solutions", color: "text-primary" },
+                  { value: `${projects.filter(p => isFullStackProject(p.skillNames ?? [])).length}`, label: "Full-Stack Solutions", color: "text-accent-violet" },
                 ].map((item) => (
                   <div
                     key={item.label}
@@ -309,7 +309,7 @@ export default function HomePage() {
               Technical <span className="text-primary">Expertise</span>
             </h2>
 
-            <div className="w-24 h-1 bg-primary rounded-full"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary via-primary to-accent-violet rounded-full"></div>
           </div>
 
           {/* Endless Tech Stack Marquee */}
@@ -384,16 +384,16 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            {/* Frameworks & Tools */}
+            {/* Frameworks & Tools — VIOLET accent */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="glass-card p-8 rounded-2xl border-t-4 border-t-primary"
+              className="glass-card p-8 rounded-2xl border-t-4 border-t-accent-violet"
             >
               <h3 className="font-sans text-body-lg font-bold text-on-background mb-6 flex items-center gap-2 select-none">
-                <Layers size={20} className="text-primary" /> Frameworks &amp; Tools
+                <Layers size={20} className="text-accent-violet" /> Frameworks &amp; Tools
               </h3>
               <div className="space-y-6">
                 {frameworkSkills.map((skill) => {
@@ -404,16 +404,16 @@ export default function HomePage() {
 
                   return (
                     <div key={skill.id} className="group">
-                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-primary">
+                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-accent-violet">
                         <span className="flex items-center gap-2">
                           {skill.name}
                           {projectCount > 0 && (
-                            <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-mono bg-accent-violet-10 text-accent-violet px-1.5 py-0.5 rounded-full">
                               {projectCount} project{projectCount > 1 ? "s" : ""}
                             </span>
                           )}
                         </span>
-                        <span className="text-primary font-mono">{percentage}%</span>
+                        <span className="text-accent-violet font-mono">{percentage}%</span>
                       </div>
 
                       <div className="h-[6px] bg-white/10 rounded-full overflow-hidden">
@@ -422,7 +422,7 @@ export default function HomePage() {
                           whileInView={{ width: `${percentage}%` }}
                           viewport={{ once: true }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.35)]"
+                          className="h-full bg-accent-violet rounded-full shadow-[0_0_10px_rgba(168,85,247,0.35)]"
                         />
                       </div>
                     </div>
@@ -431,16 +431,16 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            {/* Other Specialized Skills */}
+            {/* Other Specialized Skills — VIOLET accent */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="glass-card p-8 rounded-2xl border-t-4 border-t-primary"
+              className="glass-card p-8 rounded-2xl border-t-4 border-t-accent-violet"
             >
               <h3 className="font-sans text-body-lg font-bold text-on-background mb-6 flex items-center gap-2 select-none">
-                <Palette size={20} className="text-primary" /> Other Skills
+                <Palette size={20} className="text-accent-violet" /> Other Skills
               </h3>
               <div className="space-y-6">
                 {otherSkills.map((skill) => {
@@ -451,16 +451,16 @@ export default function HomePage() {
 
                   return (
                     <div key={skill.id} className="group">
-                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-primary">
+                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-accent-violet">
                         <span className="flex items-center gap-2">
                           {skill.name}
                           {projectCount > 0 && (
-                            <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-mono bg-accent-violet-10 text-accent-violet px-1.5 py-0.5 rounded-full">
                               {projectCount} project{projectCount > 1 ? "s" : ""}
                             </span>
                           )}
                         </span>
-                        <span className="text-primary font-mono">{percentage}%</span>
+                        <span className="text-accent-violet font-mono">{percentage}%</span>
                       </div>
 
                       <div className="h-[6px] bg-white/10 rounded-full overflow-hidden">
@@ -469,7 +469,7 @@ export default function HomePage() {
                           whileInView={{ width: `${percentage}%` }}
                           viewport={{ once: true }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.35)]"
+                          className="h-full bg-accent-violet rounded-full shadow-[0_0_10px_rgba(168,85,247,0.35)]"
                         />
                       </div>
                     </div>
@@ -489,7 +489,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
             <div>
               <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-                Featured <span className="text-primary">Projects</span>
+                Featured <span className="text-accent-violet">Projects</span>
               </h2>
               <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                 A collection of academic and personal engineering achievements.
@@ -497,7 +497,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/projects"
-              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-semibold hover:bg-primary/20 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap sm:ml-auto"
+              className="px-4 sm:px-6 py-2 sm:py-2.5 rounded-full bg-accent-violet-10 border border-accent-violet-30 text-accent-violet text-xs sm:text-sm font-semibold hover:bg-accent-violet-20 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap sm:ml-auto"
             >
               <span>All Projects</span>
               <ArrowRight size={16} />
@@ -776,10 +776,25 @@ export default function HomePage() {
                     const parsed = new Date(d);
                     return isNaN(parsed.getTime()) ? d : parsed.toLocaleDateString("en-US", { month: "short", year: "numeric" });
                   };
-                  const nodeColor = "bg-primary shadow-[0_0_15px_#ff69b4]";
-                  const textColor = "text-primary";
-                  const badgeBg = "bg-primary/10 text-primary";
-                  const hoverBorder = "hover:border-primary/30";
+                  const isEven = idx % 2 === 0;
+                  // Explicit class strings — Tailwind tidak bisa generate nama class dinamis
+                  const accent = isEven
+                    ? {
+                        node: "bg-primary shadow-[0_0_15px_#ff69b4]",
+                        text: "text-primary",
+                        badge: "bg-primary/10 text-primary",
+                        hoverBorder: "hover:border-primary/30",
+                        divider: "border-primary/30",
+                        chip: "bg-primary/10 text-primary border-primary/30 hover:border-primary/50 hover:bg-primary/20",
+                      }
+                    : {
+                        node: "bg-accent-violet shadow-[0_0_15px_#a855f7]",
+                        text: "text-accent-violet",
+                        badge: "bg-accent-violet-10 text-accent-violet",
+                        hoverBorder: "hover:border-accent-violet-30",
+                        divider: "border-accent-violet-30",
+                        chip: "bg-accent-violet-10 text-accent-violet border-accent-violet-30 hover:border-accent-violet-50 hover:bg-accent-violet-20",
+                      };
                   const points = exp.description.split("\n").filter(Boolean);
                   return (
                     <motion.div
@@ -790,14 +805,14 @@ export default function HomePage() {
                       transition={{ delay: idx * 0.15 }}
                       className="relative"
                     >
-                      <div className={`absolute -left-[27px] sm:-left-[51px] top-1.5 w-5 h-5 rounded-full ${nodeColor}`}></div>
-                      <div className={`glass-card p-4 sm:p-8 rounded-2xl ${hoverBorder} transition-colors duration-300`}>
+                      <div className={`absolute -left-[27px] sm:-left-[51px] top-1.5 w-5 h-5 rounded-full ${accent.node}`}></div>
+                      <div className={`glass-card p-4 sm:p-8 rounded-2xl ${accent.hoverBorder} transition-colors duration-300`}>
                         <div className="flex flex-col md:flex-row justify-between items-start mb-4 gap-2">
                           <div>
-                            <h3 className={`font-sans text-sm sm:text-body-lg font-bold ${textColor}`}>{exp.position}</h3>
+                            <h3 className={`font-sans text-sm sm:text-body-lg font-bold ${accent.text}`}>{exp.position}</h3>
                             <p className="font-mono text-[10px] sm:text-label-mono text-on-surface-variant mt-1">{exp.company}</p>
                           </div>
-                          <span className={`${badgeBg} px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-bold font-mono whitespace-nowrap`}>
+                          <span className={`${accent.badge} px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-bold font-mono whitespace-nowrap`}>
                             {formatDate(exp.startDate)} — {exp.isCurrent ? "Present" : formatDate(exp.endDate)}
                           </span>
                         </div>
@@ -805,8 +820,8 @@ export default function HomePage() {
                           <ul className="space-y-2 sm:space-y-3.5 text-on-surface-variant font-sans text-sm sm:text-body-md">
                             {points.map((pt, pIdx) => (
                               <li key={pIdx} className="flex items-start gap-2 sm:gap-3">
-                                <ArrowRight size={14} className={`${textColor} mt-1 shrink-0 hidden sm:inline`} />
-                                <ArrowRight size={12} className={`${textColor} mt-0.5 shrink-0 sm:hidden`} />
+                                <ArrowRight size={14} className={`${accent.text} mt-1 shrink-0 hidden sm:inline`} />
+                                <ArrowRight size={12} className={`${accent.text} mt-0.5 shrink-0 sm:hidden`} />
                                 <span>{pt}</span>
                               </li>
                             ))}
@@ -815,12 +830,12 @@ export default function HomePage() {
                           <p className="text-on-surface-variant font-sans text-sm sm:text-body-md leading-relaxed">{exp.description}</p>
                         )}
                         {exp.certificate && (
-                          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-primary/30 flex justify-end">
+                          <div className={`mt-4 sm:mt-6 pt-4 sm:pt-6 border-t ${accent.divider} flex justify-end`}>
                             <a
                               href={exp.certificate}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/30 hover:border-primary/50 font-semibold text-xs sm:text-sm group/link"
+                              className={`inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-colors border font-semibold text-xs sm:text-sm group/link ${accent.chip}`}
                             >
                               <span className="material-symbols-outlined text-[14px] sm:text-[16px]">description</span>
                               <span>View Certificate</span>
@@ -847,7 +862,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
                 <div>
                   <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-                    GitHub <span className="text-primary">Activity</span>
+                    GitHub <span className="text-accent-violet">Activity</span>
                   </h2>
                   <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                     Recent commits and contribution graph from @{githubUsername}.
@@ -937,7 +952,7 @@ export default function HomePage() {
           <div>
             <h2 className="font-sans text-5xl lg:text-6xl text-on-background mb-6 leading-tight font-extrabold tracking-tighter">
               Let&apos;s build <br />
-              <span className="text-primary">something great.</span>
+              <span className="text-gradient-pink-violet">something great.</span>
             </h2>
             <p className="font-sans text-body-lg text-on-surface-variant mb-12">
               I&apos;m currently available for freelance projects or internship opportunities. Reach out and let&apos;s discuss how I can help.

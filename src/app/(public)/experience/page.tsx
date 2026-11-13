@@ -20,18 +20,40 @@ export default function ExperiencePage() {
     return parsed.toLocaleDateString("en-US", { month: "short", year: "numeric" });
   };
 
-  const timelineItems = experiences.length > 0 ? experiences.map((exp) => {
-    const nodeColor = "bg-primary shadow-[0_0_15px_#ff69b4]";
-    const badgeBg = "bg-primary/10 text-primary";
+  const timelineItems = experiences.length > 0 ? experiences.map((exp, idx) => {
+    // Explicit class strings per variant — Tailwind tidak generate class nama dinamis.
+    const accent = idx % 2 === 0
+      ? {
+          node: "bg-primary shadow-[0_0_15px_#ff69b4]",
+          divider: "border-l-primary",
+          badge: "bg-primary/10 text-primary",
+          cert: "border-t border-primary/30",
+          certChip: "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/30 hover:border-primary/50",
+          hoverText: "group-hover:text-primary",
+          arrow: "text-primary",
+        }
+      : {
+          node: "bg-accent-violet shadow-[0_0_15px_#a855f7]",
+          divider: "border-l-accent-violet",
+          badge: "bg-accent-violet-10 text-accent-violet",
+          cert: "border-t border-accent-violet-30",
+          certChip: "bg-accent-violet-10 text-accent-violet hover:bg-accent-violet-20 border border-accent-violet-30 hover:border-accent-violet-50",
+          hoverText: "group-hover:text-accent-violet",
+          arrow: "text-accent-violet",
+        };
     return {
       id: exp.id,
       role: exp.position,
       company: exp.company,
       period: `${formatDate(exp.startDate)} — ${exp.isCurrent ? "Present" : formatDate(exp.endDate)}`,
-      color: "border-l-primary",
-      nodeColor: nodeColor,
-      badgeBg: badgeBg,
-      icon: <Briefcase className="text-primary-fixed-dim" size={16} />,
+      color: accent.divider,
+      nodeColor: accent.node,
+      badgeBg: accent.badge,
+      certBorder: accent.cert,
+      certChip: accent.certChip,
+      hoverText: accent.hoverText,
+      arrowColor: accent.arrow,
+      icon: <Briefcase className={idx % 2 === 0 ? "text-primary-fixed-dim" : "text-accent-violet-soft"} size={16} />,
       points: exp.description.split("\n").filter(Boolean),
       certificate: exp.certificate,
     };
@@ -81,7 +103,7 @@ export default function ExperiencePage() {
                           {item.icon}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="font-sans text-sm sm:text-body-lg font-bold text-on-background group-hover:text-primary transition-colors truncate">
+                          <h3 className={`font-sans text-sm sm:text-body-lg font-bold text-on-background ${item.hoverText} transition-colors truncate`}>
                             {item.role}
                           </h3>
                           <p className="font-mono text-[10px] sm:text-label-mono text-on-surface-variant truncate">
@@ -97,20 +119,20 @@ export default function ExperiencePage() {
                     <ul className="space-y-2 sm:space-y-4 text-on-surface-variant font-sans text-sm sm:text-body-md leading-relaxed">
                       {item.points.map((pt, pIdx) => (
                         <li key={pIdx} className="flex items-start gap-2 sm:gap-3.5">
-                          <ArrowRight size={14} className="text-primary mt-0.5 sm:mt-1 shrink-0 group-hover:translate-x-1 transition-transform hidden sm:block" />
-                          <ArrowRight size={12} className="text-primary mt-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform sm:hidden" />
+                          <ArrowRight size={14} className={`${item.arrowColor} mt-0.5 sm:mt-1 shrink-0 group-hover:translate-x-1 transition-transform hidden sm:block`} />
+                          <ArrowRight size={12} className={`${item.arrowColor} mt-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform sm:hidden`} />
                           <span className="text-xs sm:text-base">{pt}</span>
                         </li>
                       ))}
                     </ul>
 
                     {item.certificate && (
-                      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-primary/30 flex justify-end">
+                      <div className={`mt-4 sm:mt-6 pt-4 sm:pt-6 ${item.certBorder} flex justify-end`}>
                         <a
                           href={item.certificate}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/30 hover:border-primary/50 font-semibold text-xs sm:text-sm group/link"
+                          className={`inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg ${item.certChip} transition-colors font-semibold text-xs sm:text-sm group/link`}
                         >
                           <FileText size={14} className="hidden sm:block" />
                           <FileText size={12} className="sm:hidden" />
