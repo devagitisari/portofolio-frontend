@@ -473,12 +473,12 @@ body {
 
 .admin-mesh-bg {
   background-image: radial-gradient(at 0% 0%, rgba(255, 105, 180, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(0, 247, 232, 0.08) 0px, transparent 50%);
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.08) 0px, transparent 50%);
 }
 
 [data-theme="light"] .admin-mesh-bg {
   background-image: radial-gradient(at 0% 0%, rgba(217, 30, 99, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(0, 151, 167, 0.04) 0px, transparent 50%);
+    radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.04) 0px, transparent 50%);
 }
 
 /* =========================================

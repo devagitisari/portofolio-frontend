@@ -116,7 +116,7 @@ export default function ContactPage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="absolute inset-0 bg-surface-container/95 rounded-3xl flex flex-col items-center justify-center text-center p-8 z-20"
                 >
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 shadow-[0_0_20px_rgba(0,210,255,0.2)]">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
                     <Check size={36} />
                   </div>
                   <h3 className="font-sans text-headline-md font-bold text-on-background mb-2">Message Logged!</h3>

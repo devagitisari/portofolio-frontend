@@ -422,7 +422,7 @@ export default function AdminSettingsPage() {
           onClick={() => setActiveTab("seo")}
           className={`px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
             activeTab === "seo"
-              ? "bg-tertiary text-on-tertiary shadow-[0_0_15px_rgba(0,255,255,0.3)]"
+              ? "bg-tertiary text-on-tertiary shadow-[0_0_15px_rgba(168,85,247,0.3)]"
               : "bg-surface-container-low text-on-surface-variant hover:bg-outline-variant/10"
           }`}
         >
@@ -947,7 +947,7 @@ export default function AdminSettingsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="w-full md:w-auto px-12 py-3.5 bg-gradient-to-r from-tertiary to-primary text-white font-extrabold text-sm rounded-lg hover:shadow-[0_0_20px_rgba(0,255,255,0.25)] transition-all duration-300 active:scale-95 disabled:opacity-50 select-none cursor-pointer border-none"
+                  className="w-full md:w-auto px-12 py-3.5 bg-gradient-to-r from-tertiary to-primary text-white font-extrabold text-sm rounded-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.25)] transition-all duration-300 active:scale-95 disabled:opacity-50 select-none cursor-pointer border-none"
                 >
                   {saving ? "Saving Changes..." : "Save Changes"}
                 </button>

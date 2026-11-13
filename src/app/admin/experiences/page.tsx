@@ -243,7 +243,7 @@ export default function AdminExperiencesPage() {
                         {sortedExperiences.map((exp, idx) => (
                             <div key={exp.id} className="relative pl-16 group">
                                 {/* Timeline dot */}
-                                <div className={`absolute left-[15px] top-6 w-5 h-5 rounded-full z-10 transition-transform group-hover:scale-125 duration-300 ${idx % 2 === 0 ? "bg-primary shadow-[0_0_12px_rgba(255,105,180,0.6)]" : "bg-tertiary shadow-[0_0_12px_rgba(0,247,232,0.6)]"}`} />
+                                <div className={`absolute left-[15px] top-6 w-5 h-5 rounded-full z-10 transition-transform group-hover:scale-125 duration-300 ${idx % 2 === 0 ? "bg-primary shadow-[0_0_12px_rgba(255,105,180,0.6)]" : "bg-tertiary shadow-[0_0_12px_rgba(168,85,247,0.6)]"}`} />
 
                                 <div className="admin-glass-card p-6 rounded-2xl hover:border-primary/20 transition-all duration-300">
                                     <div className="flex flex-col gap-4">
