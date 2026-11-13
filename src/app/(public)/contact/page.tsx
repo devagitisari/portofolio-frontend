@@ -43,9 +43,9 @@ export default function ContactPage() {
           Get In Touch
         </span>
         <h1 className="font-sans text-5xl lg:text-6xl text-on-background font-extrabold tracking-tighter mb-4 leading-none">
-          Contact <span className="text-primary">Me</span>
+          Contact <span className="text-gradient-primary">Me</span>
         </h1>
-        <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+        <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-violet mx-auto rounded-full mb-6"></div>
         <p className="font-sans text-body-lg text-on-surface-variant max-w-xl mx-auto leading-relaxed">
           Have an exciting project idea, a freelance inquiry, or an internship opportunity? Send me a message below!
         </p>

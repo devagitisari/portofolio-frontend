@@ -53,6 +53,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     <h1 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-on-background font-extrabold tracking-tight mb-4">
                         {project.title}
                     </h1>
+                    <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-violet rounded-full mb-4"></div>
                     <p className="font-sans text-body-lg text-on-surface-variant">
                         {project.category || "General"}
                     </p>

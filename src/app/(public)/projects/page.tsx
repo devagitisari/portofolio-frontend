@@ -40,9 +40,9 @@ export default function ProjectsPage() {
           Showcase
         </span>
         <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-on-background font-extrabold tracking-tighter mb-4 leading-none">
-          My <span className="text-primary">Projects</span>
+          My <span className="text-gradient-primary">Projects</span>
         </h1>
-        <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
+        <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-violet mx-auto rounded-full mb-6"></div>
         <p className="font-sans text-body-lg text-on-surface-variant max-w-xl mx-auto leading-relaxed">
           An exploration of academic, professional, and personal engineering achievements, showcasing my full-stack capabilities.
         </p>

@@ -175,6 +175,8 @@ export default function HomePage() {
               Deva <span className="text-gradient-primary">Gitisari</span>
             </motion.h1>
 
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-violet mx-auto rounded-full mb-8"></div>
+
             <motion.p
               variants={fadeInUp}
               className="font-sans text-body-lg text-on-surface-variant mb-10 max-w-2xl mx-auto leading-relaxed"
@@ -306,10 +308,10 @@ export default function HomePage() {
 
           <div className="mb-16 flex flex-col items-center">
             <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-on-background mb-4 font-bold tracking-tight">
-              Technical <span className="text-primary">Expertise</span>
+              Technical <span className="text-gradient-primary">Expertise</span>
             </h2>
 
-            <div className="w-24 h-1 bg-gradient-to-r from-primary via-primary to-accent-violet rounded-full"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent-violet mx-auto rounded-full"></div>
           </div>
 
           {/* Endless Tech Stack Marquee */}
@@ -489,8 +491,9 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
             <div>
               <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-                Featured <span className="text-accent-violet">Projects</span>
+                Featured <span className="text-gradient-primary">Projects</span>
               </h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent-violet rounded-full mb-3"></div>
               <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                 A collection of academic and personal engineering achievements.
               </p>
@@ -675,8 +678,9 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
             <div>
               <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-                Latest <span className="text-primary">Certifications</span>
+                Latest <span className="text-gradient-primary">Certifications</span>
               </h2>
+              <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent-violet rounded-full mb-3"></div>
               <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                 Recent professional credentials and achievements.
               </p>
@@ -759,8 +763,9 @@ export default function HomePage() {
           {/* Title centered */}
           <div className="max-w-container-max mx-auto mb-16 text-center">
             <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-              Professional <span className="text-primary">Journey</span>
+              Professional <span className="text-gradient-primary">Journey</span>
             </h2>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent-violet mx-auto rounded-full mb-3"></div>
             <p className="text-on-surface-variant font-sans text-body-md">
               Milestones in my career and education.
             </p>
@@ -862,8 +867,9 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
                 <div>
                   <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
-                    GitHub <span className="text-accent-violet">Activity</span>
+                    GitHub <span className="text-gradient-primary">Activity</span>
                   </h2>
+                  <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent-violet rounded-full mb-3"></div>
                   <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                     Recent commits and contribution graph from @{githubUsername}.
                   </p>
