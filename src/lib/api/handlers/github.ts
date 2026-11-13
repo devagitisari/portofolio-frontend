@@ -10,6 +10,23 @@ interface CacheEntry {
 
 const cache = new Map<string, CacheEntry>();
 
+/**
+ * Optional personal access token. Unauthenticated GitHub API calls are limited
+ * to 60 requests per hour *per IP*, and Vercel egress IPs are shared — so a
+ * token is recommended for production. Without one the API still works, it is
+ * just more prone to rate limiting.
+ */
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN?.trim();
+
+function githubHeaders(accept = "application/vnd.github+json"): Record<string, string> {
+  return {
+    Accept: accept,
+    "User-Agent": "DevaPortfolio/1.0",
+    "X-GitHub-Api-Version": "2022-11-28",
+    ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
+  };
+}
+
 async function remember<T>(key: string, ttlMs: number, producer: () => Promise<T>): Promise<T> {
   const hit = cache.get(key);
   const now = Date.now();
@@ -77,6 +94,84 @@ function summarize(event: { type?: string; repo?: { name?: string }; payload?: R
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
 const headline = (value: string) => value.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^./, (c) => c.toUpperCase());
 
+export interface ActivityEvent {
+  id: string | null;
+  type: string;
+  repo: string | null;
+  createdAt: string | null;
+  summary: string;
+  url: string;
+}
+
+/** Public activity feed (`/users/:user/events/public`). */
+async function fetchPublicEvents(username: string): Promise<ActivityEvent[]> {
+  const response = await fetch(`https://api.github.com/users/${username}/events/public?per_page=12`, {
+    headers: githubHeaders(),
+    signal: AbortSignal.timeout(8000),
+    cache: "no-store",
+  });
+
+  if (!response.ok) return [];
+
+  const payload = (await response.json()) as Array<Record<string, unknown>>;
+  if (!Array.isArray(payload)) return [];
+
+  return payload.map((event) => {
+    const repo = (event.repo as { name?: string } | undefined)?.name;
+
+    return {
+      id: (event.id as string | undefined) ?? null,
+      type: (event.type as string | undefined) ?? "GitHubEvent",
+      repo: repo ?? null,
+      createdAt: (event.created_at as string | undefined) ?? null,
+      summary: summarize(event as never),
+      url: repo ? `https://github.com/${repo}` : `https://github.com/${username}`,
+    };
+  });
+}
+
+/**
+ * Fallback source: the public activity feed is empty for accounts that hide
+ * their activity (`Settings → Public profile → hide activity`), which is a
+ * per-account privacy switch we cannot change from here. The commit search
+ * API always lists the latest commits, so it keeps the section populated.
+ */
+async function fetchRecentCommits(username: string): Promise<ActivityEvent[]> {
+  const query = encodeURIComponent(`author:${username}`);
+
+  const response = await fetch(
+    `https://api.github.com/search/commits?q=${query}&sort=author-date&order=desc&per_page=10`,
+    {
+      headers: githubHeaders(),
+      signal: AbortSignal.timeout(8000),
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) return [];
+
+  const payload = (await response.json()) as { items?: Array<Record<string, unknown>> };
+  const items = Array.isArray(payload?.items) ? payload.items : [];
+
+  return items.map((item) => {
+    const repository = item.repository as { full_name?: string } | undefined;
+    const commit = item.commit as { message?: string; author?: { date?: string } } | undefined;
+    const repo = repository?.full_name ?? null;
+    const message = (commit?.message ?? "").split("\n")[0]?.trim() || "Pushed commits";
+
+    return {
+      id: (item.sha as string | undefined) ?? null,
+      type: "PushEvent",
+      repo,
+      createdAt: commit?.author?.date ?? null,
+      summary: message,
+      url:
+        (item.html_url as string | undefined) ??
+        (repo ? `https://github.com/${repo}` : `https://github.com/${username}`),
+    };
+  });
+}
+
 async function activity(): Promise<Response> {
   const settings = await prisma.setting.findFirst({ orderBy: { id: "asc" } });
 
@@ -91,32 +186,11 @@ async function activity(): Promise<Response> {
   }
 
   const events = await remember(`github_activity_${username}`, 15 * 60 * 1000, async () => {
-    try {
-      const response = await fetch(`https://api.github.com/users/${username}/events/public`, {
-        headers: { Accept: "application/json", "User-Agent": "DevaPortfolio/1.0" },
-        signal: AbortSignal.timeout(8000),
-        cache: "no-store",
-      });
+    const publicEvents = await fetchPublicEvents(username);
+    if (publicEvents.length > 0) return publicEvents.slice(0, 8);
 
-      if (!response.ok) return [];
-
-      const payload = (await response.json()) as Array<Record<string, unknown>>;
-
-      return payload.slice(0, 8).map((event) => {
-        const repo = (event.repo as { name?: string } | undefined)?.name;
-
-        return {
-          id: (event.id as string | undefined) ?? null,
-          type: (event.type as string | undefined) ?? "GitHubEvent",
-          repo: repo ?? null,
-          createdAt: (event.created_at as string | undefined) ?? null,
-          summary: summarize(event as never),
-          url: repo ? `https://github.com/${repo}` : `https://github.com/${username}`,
-        };
-      });
-    } catch {
-      return [];
-    }
+    const commits = await fetchRecentCommits(username);
+    return commits.slice(0, 8);
   });
 
   return json({ data: { enabled: true, username, events } });
@@ -162,7 +236,7 @@ async function contributions(ctx: Ctx): Promise<Response> {
 }
 
 /** Port of GitHubActivityController::wrapContributionsHtml. */
-function wrapContributionsHtml(html: string, username: string, theme = "dark"): string {
+export function wrapContributionsHtml(html: string, username: string, theme = "dark"): string {
   const isLight = theme === "light";
   const colorScheme = isLight ? "light" : "dark";
 
@@ -227,27 +301,41 @@ function wrapContributionsHtml(html: string, username: string, theme = "dark"): 
     }
     .ContributionCalendar-grid {
       width: max-content;
+      border-collapse: separate;
       border-spacing: 5px !important;
     }
     .ContributionCalendar-label {
       color: ${labelColor};
       fill: ${labelColor};
       font-size: 12px;
+      font-weight: 400;
+      text-align: left;
+      padding: 0 6px 0 0;
+    }
+    .ContributionCalendar-grid tr {
+      height: 16px !important;
     }
     .ContributionCalendar-day {
-      height: 16px !important;
+      shape-rendering: geometricPrecision;
+      width: 11px !important;
+      height: 11px !important;
+      padding: 0 !important;
       border-radius: 3px !important;
-      stroke: ${borderColor};
+      border: 1px solid ${borderColor};
+      /* GitHub colours the day cells with background-color. The fill
+         property alone is SVG-only and leaves the cells transparent. */
+      background-color: ${levels[0]};
       fill: ${levels[0]};
       outline: 1px solid ${outlineColor};
       outline-offset: -1px;
     }
-    .ContributionCalendar-day[data-level="0"] { fill: ${levels[0]}; }
-    .ContributionCalendar-day[data-level="1"] { fill: ${levels[1]}; }
-    .ContributionCalendar-day[data-level="2"] { fill: ${levels[2]}; }
-    .ContributionCalendar-day[data-level="3"] { fill: ${levels[3]}; }
-    .ContributionCalendar-day[data-level="4"] { fill: ${levels[4]}; }
+    .ContributionCalendar-day[data-level="0"] { background-color: ${levels[0]}; fill: ${levels[0]}; }
+    .ContributionCalendar-day[data-level="1"] { background-color: ${levels[1]}; fill: ${levels[1]}; }
+    .ContributionCalendar-day[data-level="2"] { background-color: ${levels[2]}; fill: ${levels[2]}; }
+    .ContributionCalendar-day[data-level="3"] { background-color: ${levels[3]}; fill: ${levels[3]}; }
+    .ContributionCalendar-day[data-level="4"] { background-color: ${levels[4]}; fill: ${levels[4]}; }
     .width-full {
+      width: 100%;
       color: ${labelColor};
       font-size: 13px;
     }
@@ -256,13 +344,24 @@ function wrapContributionsHtml(html: string, username: string, theme = "dark"): 
       font-size: 13px;
     }
     .float-left {
+      float: left;
       margin-left: 40px;
       margin-top: 12px;
     }
     .float-right {
-      display: inline-block;
+      float: right;
+      display: flex;
+      align-items: center;
+      gap: 4px;
       margin-top: 12px;
       margin-right: 10px;
+    }
+    .float-right .ContributionCalendar-day {
+      display: inline-block;
+      width: 10px !important;
+      height: 10px !important;
+      margin: 0 1px;
+      border-radius: 2px !important;
     }
     .js-yearly-contributions {
       min-width: 1010px;

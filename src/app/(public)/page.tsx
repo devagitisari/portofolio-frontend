@@ -918,7 +918,7 @@ export default function HomePage() {
                 <h3 className="font-sans text-body-lg font-bold text-on-background mb-6">Contribution Graph</h3>
                 <div className="glass-card rounded-3xl p-5 sm:p-8 overflow-x-auto">
                   <iframe
-                    src={apiUrl(`/github-contributions?v=7&theme=${theme}`)}
+                    src={apiUrl(`/github-contributions?v=8&theme=${theme}`)}
                     title={`${githubUsername} GitHub contribution graph`}
                     className="mx-auto block h-[310px] min-w-[1010px] w-full rounded-xl border-0 bg-transparent"
                     loading="lazy"
