@@ -45,7 +45,7 @@ export default function Navbar() {
           className="select-none cursor-pointer"
         >
           <div className="font-sans text-lg font-bold tracking-tighter text-on-background">
-            Deva <span className="text-gradient-primary">Gitisari</span>
+            Deva <span className="text-primary">Gitisari</span>
           </div>
         </Link>
 

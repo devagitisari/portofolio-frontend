@@ -188,7 +188,7 @@ export default function HomePage() {
             >
               <Link
                 href="/projects"
-                className="bg-gradient-to-r from-primary to-tertiary text-white px-8 py-4 rounded-xl font-bold hover:scale-105 active:scale-95 transition-transform duration-200 shadow-[0_0_20px_rgba(255,105,180,0.24)] cursor-pointer"
+                className="bg-primary text-on-primary px-8 py-4 rounded-xl font-bold hover:scale-105 active:scale-95 transition-transform duration-200 shadow-[0_10px_30px_-12px_rgba(255,105,180,0.7)] cursor-pointer"
               >
                 View Projects
               </Link>
@@ -205,7 +205,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. About Me Section */}
-      <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8" id="about">
+      <section className="section-band-alt py-section-gap px-4 sm:px-6 lg:px-8" id="about">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
 
@@ -254,8 +254,8 @@ export default function HomePage() {
               <motion.div variants={fadeInUp} className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
                 {[
                   { value: `${projects.length}`, label: "Projects Built", color: "text-primary" },
-                  { value: `${visibleSkills(skills, projects).length}`, label: "Tech Stack Used", color: "text-tertiary" },
-                  { value: settings.gpa || "N/A", label: "GPA", color: "text-secondary" },
+                  { value: `${visibleSkills(skills, projects).length}`, label: "Tech Stack Used", color: "text-primary" },
+                  { value: settings.gpa || "N/A", label: "GPA", color: "text-primary" },
                   { value: `${projects.filter(p => isFullStackProject(p.skillNames ?? [])).length}`, label: "Full-Stack Solutions", color: "text-primary" },
                 ].map((item) => (
                   <div
@@ -290,7 +290,7 @@ export default function HomePage() {
                     style={{ aspectRatio: "3/4" }}
                   />
                 ) : (
-                  <div className="w-full bg-gradient-to-br from-primary/20 to-tertiary/20 flex items-center justify-center rounded-3xl" style={{ aspectRatio: "3/4" }}>
+                  <div className="w-full bg-surface-container-high flex items-center justify-center rounded-3xl" style={{ aspectRatio: "3/4" }}>
                     <User className="w-24 h-24 text-primary/70" />
                   </div>
                 )}
@@ -301,20 +301,20 @@ export default function HomePage() {
       </section>
 
       {/* 3. Technical Expertise Marquee & Progress */}
-      <section className="py-section-gap px-gutter bg-surface-container-lowest/30" id="skills">
+      <section className="section-band py-section-gap px-gutter" id="skills">
         <div className="max-w-container-max mx-auto">
 
           <div className="mb-16 flex flex-col items-center">
-            <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-gradient-primary mb-4 font-bold tracking-tight">
-              Technical Expertise
+            <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-on-background mb-4 font-bold tracking-tight">
+              Technical <span className="text-primary">Expertise</span>
             </h2>
 
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-tertiary rounded-full"></div>
+            <div className="w-24 h-1 bg-primary rounded-full"></div>
           </div>
 
           {/* Endless Tech Stack Marquee */}
           {skills.length > 0 && (
-            <div className="overflow-hidden mb-20 relative py-4 border-y border-white/5 bg-surface-container-lowest/50 backdrop-blur-sm rounded-2xl">
+            <div className="overflow-hidden mb-20 relative py-4 border-y border-white/5 bg-surface-container-low backdrop-blur-sm rounded-2xl">
               <div className="animate-scroll gap-12 select-none">
                 {/* First loop of skills */}
                 <div className="flex gap-16 items-center px-6 grayscale opacity-45 hover:grayscale-0 hover:opacity-100 transition-all duration-300">
@@ -346,8 +346,8 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="glass-card p-8 rounded-2xl border-t-4 border-t-primary"
             >
-              <h3 className="font-sans text-body-lg font-bold text-primary mb-6 flex items-center gap-2 select-none">
-                <Code size={20} /> Languages
+              <h3 className="font-sans text-body-lg font-bold text-on-background mb-6 flex items-center gap-2 select-none">
+                <Code size={20} className="text-primary" /> Languages
               </h3>
               <div className="space-y-6">
                 {languageSkills.map((skill) => {
@@ -375,7 +375,7 @@ export default function HomePage() {
                           whileInView={{ width: `${percentage}%` }}
                           viewport={{ once: true }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full bg-gradient-to-r from-white via-primary to-primary rounded-full shadow-[0_0_10px_rgba(165,231,255,0.5)]"
+                          className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.35)]"
                         />
                       </div>
                     </div>
@@ -390,10 +390,10 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="glass-card p-8 rounded-2xl border-t-4 border-t-tertiary"
+              className="glass-card p-8 rounded-2xl border-t-4 border-t-primary"
             >
-              <h3 className="font-sans text-body-lg font-bold text-tertiary mb-6 flex items-center gap-2 select-none">
-                <Layers size={20} /> Frameworks &amp; Tools
+              <h3 className="font-sans text-body-lg font-bold text-on-background mb-6 flex items-center gap-2 select-none">
+                <Layers size={20} className="text-primary" /> Frameworks &amp; Tools
               </h3>
               <div className="space-y-6">
                 {frameworkSkills.map((skill) => {
@@ -404,16 +404,16 @@ export default function HomePage() {
 
                   return (
                     <div key={skill.id} className="group">
-                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-tertiary">
+                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-primary">
                         <span className="flex items-center gap-2">
                           {skill.name}
                           {projectCount > 0 && (
-                            <span className="text-[10px] font-mono bg-tertiary/10 text-tertiary px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
                               {projectCount} project{projectCount > 1 ? "s" : ""}
                             </span>
                           )}
                         </span>
-                        <span className="text-tertiary font-mono">{percentage}%</span>
+                        <span className="text-primary font-mono">{percentage}%</span>
                       </div>
 
                       <div className="h-[6px] bg-white/10 rounded-full overflow-hidden">
@@ -422,7 +422,7 @@ export default function HomePage() {
                           whileInView={{ width: `${percentage}%` }}
                           viewport={{ once: true }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full bg-gradient-to-r from-white via-tertiary to-tertiary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.5)]"
+                          className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.35)]"
                         />
                       </div>
                     </div>
@@ -437,10 +437,10 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="glass-card p-8 rounded-2xl border-t-4 border-t-secondary"
+              className="glass-card p-8 rounded-2xl border-t-4 border-t-primary"
             >
-              <h3 className="font-sans text-body-lg font-bold text-secondary mb-6 flex items-center gap-2 select-none">
-                <Palette size={20} /> Other Skills
+              <h3 className="font-sans text-body-lg font-bold text-on-background mb-6 flex items-center gap-2 select-none">
+                <Palette size={20} className="text-primary" /> Other Skills
               </h3>
               <div className="space-y-6">
                 {otherSkills.map((skill) => {
@@ -451,16 +451,16 @@ export default function HomePage() {
 
                   return (
                     <div key={skill.id} className="group">
-                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-secondary">
+                      <div className="flex justify-between mb-2 font-sans text-body-md font-medium transition-colors group-hover:text-primary">
                         <span className="flex items-center gap-2">
                           {skill.name}
                           {projectCount > 0 && (
-                            <span className="text-[10px] font-mono bg-secondary/10 text-secondary px-1.5 py-0.5 rounded-full">
+                            <span className="text-[10px] font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
                               {projectCount} project{projectCount > 1 ? "s" : ""}
                             </span>
                           )}
                         </span>
-                        <span className="text-secondary font-mono">{percentage}%</span>
+                        <span className="text-primary font-mono">{percentage}%</span>
                       </div>
 
                       <div className="h-[6px] bg-white/10 rounded-full overflow-hidden">
@@ -469,7 +469,7 @@ export default function HomePage() {
                           whileInView={{ width: `${percentage}%` }}
                           viewport={{ once: true }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full bg-gradient-to-r from-white via-secondary-container to-secondary-container rounded-full shadow-[0_0_10px_rgba(139,92,246,0.5)]"
+                          className="h-full bg-primary rounded-full shadow-[0_0_10px_rgba(255,105,180,0.35)]"
                         />
                       </div>
                     </div>
@@ -483,13 +483,13 @@ export default function HomePage() {
       </section >
 
       {/* 4. Featured Projects Section (Bento Grid) */}
-      < section className="py-section-gap px-gutter" id="projects" >
+      <section className="section-band-alt py-section-gap px-gutter" id="projects">
         <div className="max-w-container-max mx-auto">
 
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
             <div>
-              <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-gradient-primary mb-2 font-bold tracking-tight">
-                Featured Projects
+              <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
+                Featured <span className="text-primary">Projects</span>
               </h2>
               <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                 A collection of academic and personal engineering achievements.
@@ -527,13 +527,13 @@ export default function HomePage() {
 
                     <div className="relative h-full p-8 flex flex-col justify-end z-10">
                       <div className="space-y-4">
-                        <span className="inline-block text-tertiary font-mono text-xs uppercase tracking-widest font-semibold bg-black/50 px-3 py-1 rounded-lg border border-tertiary/30">
+                        <span className="inline-block text-primary font-mono text-xs uppercase tracking-widest font-semibold bg-black/50 px-3 py-1 rounded-lg border border-primary/30">
                           {bentoProjects[0].category}
                         </span>
 
                         <h3 className="font-sans text-2xl lg:text-3xl font-extrabold text-white leading-tight drop-shadow-lg">
                           {bentoProjects[0].title}
-                          <ArrowUpRight size={24} className="inline-block ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 text-tertiary" />
+                          <ArrowUpRight size={24} className="inline-block ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300 text-primary" />
                         </h3>
 
                         <p className="text-gray-100 font-sans text-base leading-relaxed max-w-2xl drop-shadow-md">
@@ -547,7 +547,7 @@ export default function HomePage() {
                             </span>
                           ))}
                           {(bentoProjects[0].skillNames ?? []).length > 4 && (
-                            <span className="bg-black/60 border border-tertiary/30 px-3 py-1.5 rounded-lg text-xs font-mono text-tertiary backdrop-blur-sm">
+                            <span className="bg-black/60 border border-primary/30 px-3 py-1.5 rounded-lg text-xs font-mono text-primary backdrop-blur-sm">
                               +{(bentoProjects[0].skillNames ?? []).length - 4}
                             </span>
                           )}
@@ -634,13 +634,13 @@ export default function HomePage() {
 
                     <div className="relative h-full p-6 flex flex-col justify-end z-10">
                       <div className="space-y-3">
-                        <span className="inline-block text-secondary font-mono text-xs uppercase tracking-widest font-semibold bg-black/50 px-3 py-1 rounded-lg border border-secondary/30">
+                        <span className="inline-block text-primary font-mono text-xs uppercase tracking-widest font-semibold bg-black/50 px-3 py-1 rounded-lg border border-primary/30">
                           {bentoProjects[2].category}
                         </span>
 
                         <h3 className="font-sans text-lg font-bold text-white leading-tight drop-shadow-lg">
                           {bentoProjects[2].title}
-                          <ArrowUpRight size={18} className="inline-block ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 text-secondary" />
+                          <ArrowUpRight size={18} className="inline-block ml-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 text-primary" />
                         </h3>
 
                         <p className="text-gray-100 font-sans text-sm leading-relaxed drop-shadow-md line-clamp-2">
@@ -654,7 +654,7 @@ export default function HomePage() {
                             </span>
                           ))}
                           {(bentoProjects[2].skillNames ?? []).length > 3 && (
-                            <span className="bg-black/60 border border-secondary/30 px-2.5 py-1 rounded text-xs font-mono text-secondary backdrop-blur-sm">
+                            <span className="bg-black/60 border border-primary/30 px-2.5 py-1 rounded text-xs font-mono text-primary backdrop-blur-sm">
                               +{(bentoProjects[2].skillNames ?? []).length - 3}
                             </span>
                           )}
@@ -670,12 +670,12 @@ export default function HomePage() {
       </section >
 
       {/* 4b. Latest Certifications Section */}
-      < section className="py-section-gap px-gutter" id="latest-certifications" >
+      <section className="section-band py-section-gap px-gutter" id="latest-certifications">
         <div className="max-w-container-max mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
             <div>
-              <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-gradient-primary mb-2 font-bold tracking-tight">
-                Latest Certifications
+              <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
+                Latest <span className="text-primary">Certifications</span>
               </h2>
               <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                 Recent professional credentials and achievements.
@@ -714,7 +714,7 @@ export default function HomePage() {
                     transition={{ delay: idx * 0.1 }}
                     className="glass-card rounded-2xl overflow-hidden border border-outline-variant/10 hover:border-outline-variant/30 transition-all duration-300 flex flex-col"
                   >
-                    <div className="aspect-[4/3] bg-surface-container-lowest flex items-center justify-center overflow-hidden">
+                    <div className="aspect-[4/3] bg-surface-container flex items-center justify-center overflow-hidden">
                       {imgUrl ? (
                         imgUrl.toLowerCase().endsWith('.pdf') ? (
                           <PDFPreview url={imgUrl} />
@@ -754,12 +754,12 @@ export default function HomePage() {
       </section >
 
       {/* 5. Experience Timeline */}
-      <section className="py-section-gap px-gutter bg-surface-container-lowest/50" id="experience">
+      <section className="section-band-alt py-section-gap px-gutter" id="experience">
         <div>
           {/* Title centered */}
           <div className="max-w-container-max mx-auto mb-16 text-center">
-            <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-gradient-primary mb-2 font-bold tracking-tight">
-              Professional Journey
+            <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
+              Professional <span className="text-primary">Journey</span>
             </h2>
             <p className="text-on-surface-variant font-sans text-body-md">
               Milestones in my career and education.
@@ -776,10 +776,10 @@ export default function HomePage() {
                     const parsed = new Date(d);
                     return isNaN(parsed.getTime()) ? d : parsed.toLocaleDateString("en-US", { month: "short", year: "numeric" });
                   };
-                  const nodeColor = idx % 2 === 0 ? "bg-primary shadow-[0_0_15px_#ff69b4]" : "bg-tertiary shadow-[0_0_15px_#00f7e8]";
-                  const textColor = idx % 2 === 0 ? "text-primary" : "text-tertiary";
-                  const badgeBg = idx % 2 === 0 ? "bg-primary/10 text-primary" : "bg-tertiary/10 text-tertiary";
-                  const hoverBorder = idx % 2 === 0 ? "hover:border-primary/30" : "hover:border-tertiary/30";
+                  const nodeColor = "bg-primary shadow-[0_0_15px_#ff69b4]";
+                  const textColor = "text-primary";
+                  const badgeBg = "bg-primary/10 text-primary";
+                  const hoverBorder = "hover:border-primary/30";
                   const points = exp.description.split("\n").filter(Boolean);
                   return (
                     <motion.div
@@ -842,12 +842,12 @@ export default function HomePage() {
 
       {
         settings.showGitHubActivity && githubUsername && (
-          <section className="py-section-gap px-gutter bg-surface-container-lowest/40" id="github-activity">
+          <section className="section-band py-section-gap px-gutter" id="github-activity">
             <div className="max-w-container-max mx-auto">
               <div className="flex flex-col sm:flex-row justify-between items-start gap-6 mb-12">
                 <div>
-                  <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-gradient-primary mb-2 font-bold tracking-tight">
-                    GitHub Activity
+                  <h2 className="font-sans text-xl sm:text-2xl lg:text-4xl text-on-background mb-2 font-bold tracking-tight">
+                    GitHub <span className="text-primary">Activity</span>
                   </h2>
                   <p className="text-on-surface-variant font-sans text-sm sm:text-body-md">
                     Recent commits and contribution graph from @{githubUsername}.
@@ -931,13 +931,13 @@ export default function HomePage() {
       }
 
       {/* 7. Contact Section */}
-      <section className="py-section-gap px-gutter bg-surface-container/10" id="contact">
+      <section className="section-band-alt py-section-gap px-gutter" id="contact">
         <div className="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
 
           <div>
             <h2 className="font-sans text-5xl lg:text-6xl text-on-background mb-6 leading-tight font-extrabold tracking-tighter">
               Let&apos;s build <br />
-              <span className="text-gradient-primary">something great.</span>
+              <span className="text-primary">something great.</span>
             </h2>
             <p className="font-sans text-body-lg text-on-surface-variant mb-12">
               I&apos;m currently available for freelance projects or internship opportunities. Reach out and let&apos;s discuss how I can help.
@@ -970,16 +970,16 @@ export default function HomePage() {
                 href={settings.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-6 glass-card p-4 rounded-2xl group cursor-pointer hover:border-tertiary/50 transition-all select-none"
+                className="flex items-center gap-6 glass-card p-4 rounded-2xl group cursor-pointer hover:border-primary/50 transition-all select-none"
               >
-                <div className="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                   </svg>
                 </div>
                 <div>
                   <p className="text-[10px] text-on-surface-variant font-mono uppercase tracking-widest font-semibold">GITHUB</p>
-                  <p className="font-sans text-body-md font-bold group-hover:text-tertiary transition-colors">
+                  <p className="font-sans text-body-md font-bold group-hover:text-primary transition-colors">
                     View GitHub Profile
                   </p>
                 </div>
@@ -999,7 +999,7 @@ export default function HomePage() {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="absolute inset-0 bg-surface-container/95 rounded-3xl flex flex-col items-center justify-center text-center p-8 z-20"
                 >
-                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 shadow-[0_0_20px_rgba(0,210,255,0.2)]">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-6 shadow-[0_0_20px_rgba(255,105,180,0.25)]">
                     <Check size={36} />
                   </div>
                   <h3 className="font-sans text-headline-md font-bold text-on-background mb-2">Message Sent!</h3>
@@ -1085,7 +1085,7 @@ export default function HomePage() {
 
               <button
                 type="submit"
-                className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_10px_20px_-10px_rgba(165,231,255,0.4)] cursor-pointer"
+                className="w-full bg-primary text-on-primary font-bold py-4 rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_10px_20px_-10px_rgba(255,105,180,0.5)] cursor-pointer"
               >
                 Send Message
               </button>

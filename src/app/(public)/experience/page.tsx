@@ -20,9 +20,9 @@ export default function ExperiencePage() {
     return parsed.toLocaleDateString("en-US", { month: "short", year: "numeric" });
   };
 
-  const timelineItems = experiences.length > 0 ? experiences.map((exp, idx) => {
-    const nodeColor = idx % 2 === 0 ? "bg-primary shadow-[0_0_15px_#ff69b4]" : "bg-tertiary shadow-[0_0_15px_#00f7e8]";
-    const badgeBg = idx % 2 === 0 ? "bg-primary/10 text-primary" : "bg-tertiary/10 text-tertiary";
+  const timelineItems = experiences.length > 0 ? experiences.map((exp) => {
+    const nodeColor = "bg-primary shadow-[0_0_15px_#ff69b4]";
+    const badgeBg = "bg-primary/10 text-primary";
     return {
       id: exp.id,
       role: exp.position,
@@ -48,7 +48,7 @@ export default function ExperiencePage() {
         <h1 className="font-sans text-5xl lg:text-6xl text-on-background font-extrabold tracking-tighter mb-4 leading-none">
           My <span className="text-primary">Journey</span>
         </h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-primary to-tertiary mx-auto rounded-full mb-6"></div>
+        <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
         <p className="font-sans text-body-lg text-on-surface-variant max-w-xl mx-auto leading-relaxed">
           An interactive record of my academic milestones, corporate internship experiences, and certified qualifications.
         </p>

@@ -14,25 +14,25 @@ export default function Sidebar() {
             name: "GitHub",
             icon: GitBranch,
             url: settings.github || "https://github.com",
-            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(165,231,255,0.4)]",
+            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(255,105,180,0.4)]",
         },
         {
             name: "LinkedIn",
             icon: Briefcase,
             url: settings.linkedin || "https://linkedin.com",
-            color: "hover:text-secondary hover:shadow-[0_0_15px_rgba(237,177,255,0.4)]",
+            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(255,105,180,0.4)]",
         },
         {
             name: "Share",
             icon: Share2,
             url: "#",
-            color: "hover:text-tertiary hover:shadow-[0_0_15px_rgba(0,247,232,0.4)]",
+            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(255,105,180,0.4)]",
         },
         {
             name: "Email",
             icon: Mail,
             url: settings.email ? `mailto:${settings.email}` : "mailto:deva.gitisari@example.com",
-            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(165,231,255,0.4)]",
+            color: "hover:text-primary hover:shadow-[0_0_15px_rgba(255,105,180,0.4)]",
         },
     ];
 

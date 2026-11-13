@@ -111,7 +111,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                             <h3 className="font-sans text-headline-sm font-bold text-primary mb-4">Skills Used</h3>
                             <div className="flex flex-wrap gap-3">
                                 {project.skillNames.map((skill: string) => (
-                                    <span key={skill} className="bg-tertiary/10 border border-tertiary/30 px-4 py-2.5 rounded-xl text-sm font-semibold text-tertiary">
+                                    <span key={skill} className="bg-primary/10 border border-primary/30 px-4 py-2.5 rounded-xl text-sm font-semibold text-primary">
                                         {skill}
                                     </span>
                                 ))}
@@ -153,7 +153,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                                         href={project.demoUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-tertiary/10 text-tertiary border border-tertiary/30 hover:bg-tertiary/20 hover:border-tertiary/50 font-semibold transition-all"
+                                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:border-primary/50 font-semibold transition-all"
                                     >
                                         <ExternalLink size={18} />
                                         <span>View Live Demo</span>

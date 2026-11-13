@@ -15,7 +15,7 @@ export default function Home() {
       {/* Navbar */}
       <header className="fixed top-0 left-0 w-full z-50 border-b border-white/10 -webkit-backdrop-filter-blur -webkit-backdrop-filter-blur-md backdrop-blur-md bg-surface-container/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gradient-primary">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-on-background">
             {settings.name}
           </h1>
 
@@ -46,7 +46,7 @@ export default function Home() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
               {settings.name.split(" ")[0]}{" "}
-              <span className="text-gradient-primary">
+              <span className="text-primary">
                 {settings.name.split(" ").slice(1).join(" ")}
               </span>
             </h1>
@@ -56,7 +56,7 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary via-secondary to-tertiary text-on-primary font-bold shadow-[0_0_30px_rgba(255,105,180,0.3)] hover:scale-105 transition">
+              <button className="px-8 py-4 rounded-xl bg-primary text-on-primary font-bold shadow-[0_10px_30px_-12px_rgba(255,105,180,0.7)] hover:scale-105 transition">
                 View Projects
               </button>
 
@@ -69,7 +69,7 @@ export default function Home() {
           {/* Right */}
           <div className="flex justify-center mt-12 lg:mt-0">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-tertiary rounded-full blur-2xl opacity-30" />
+              <div className="absolute inset-0 bg-primary/30 rounded-full blur-2xl" />
 
               <div className="relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] rounded-full border border-white/10 bg-surface-container/60 -webkit-backdrop-filter-blur backdrop-blur-md overflow-hidden shadow-[0_0_50px_rgba(255,105,180,0.2)] flex items-center justify-center">
                 {settings.profileImage ? (
@@ -96,8 +96,8 @@ export default function Home() {
               About
             </p>
 
-            <h2 className="text-3xl sm:text-4xl font-bold text-gradient-primary mb-6">
-              About {settings.name.split(" ")[0]}
+            <h2 className="text-3xl sm:text-4xl font-bold text-on-background mb-6">
+              About <span className="text-primary">{settings.name.split(" ")[0]}</span>
             </h2>
 
             <div className="text-on-surface-variant leading-8 text-lg space-y-4">
@@ -138,7 +138,7 @@ export default function Home() {
                   className="aspect-[4/5] w-full object-cover opacity-90"
                 />
               ) : (
-                <div className="aspect-[4/5] w-full bg-gradient-to-br from-primary/20 to-tertiary/20 flex items-center justify-center">
+                <div className="aspect-[4/5] w-full bg-surface-container flex items-center justify-center">
                   <User className="w-24 h-24 text-primary/70" />
                 </div>
               )}
@@ -148,20 +148,20 @@ export default function Home() {
       </section>
 
       {/* Skills */}
-      <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28 bg-surface-container-lowest/30">
+      <section className="px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28 bg-surface-container-low">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gradient-primary">
-              Technical Expertise
+            <h2 className="text-3xl sm:text-4xl font-bold text-on-background">
+              Technical <span className="text-primary">Expertise</span>
             </h2>
 
-            <div className="w-24 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary mx-auto mt-4 rounded-full" />
+            <div className="w-24 h-1 bg-primary mx-auto mt-4 rounded-full" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {/* Languages */}
             <div className="p-6 lg:p-8 rounded-3xl bg-surface-container/50 border border-white/10 -webkit-backdrop-filter-blur backdrop-blur-md hover:bg-surface-container transition-colors">
-              <h3 className="text-primary text-xl font-semibold mb-6 lg:mb-8">
+              <h3 className="text-on-background text-xl font-semibold mb-6 lg:mb-8">
                 Languages
               </h3>
 
@@ -189,7 +189,7 @@ export default function Home() {
 
             {/* Framework */}
             <div className="p-6 lg:p-8 rounded-3xl bg-surface-container/50 border border-white/10 -webkit-backdrop-filter-blur backdrop-blur-md hover:bg-surface-container transition-colors">
-              <h3 className="text-tertiary text-xl font-semibold mb-6 lg:mb-8">
+              <h3 className="text-on-background text-xl font-semibold mb-6 lg:mb-8">
                 Tools & Frameworks
               </h3>
 
@@ -202,12 +202,12 @@ export default function Home() {
                       <div key={skill.id} className="mb-6">
                         <div className="flex justify-between mb-2 text-sm sm:text-base">
                           <span>{skill.name}</span>
-                          <span className="text-tertiary">{pct}%</span>
+                          <span className="text-primary">{pct}%</span>
                         </div>
 
                         <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                           <div
-                            className="h-full bg-tertiary rounded-full transition-all duration-1000 ease-out"
+                            className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -219,7 +219,7 @@ export default function Home() {
 
             {/* Other */}
             <div className="p-6 lg:p-8 rounded-3xl bg-surface-container/50 border border-white/10 -webkit-backdrop-filter-blur backdrop-blur-md hover:bg-surface-container transition-colors">
-              <h3 className="text-secondary text-xl font-semibold mb-6 lg:mb-8">
+              <h3 className="text-on-background text-xl font-semibold mb-6 lg:mb-8">
                 Other Skills
               </h3>
 
@@ -232,12 +232,12 @@ export default function Home() {
                       <div key={skill.id} className="mb-6">
                         <div className="flex justify-between mb-2 text-sm sm:text-base">
                           <span>{skill.name}</span>
-                          <span className="text-secondary">{pct}%</span>
+                          <span className="text-primary">{pct}%</span>
                         </div>
 
                         <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                           <div
-                            className="h-full bg-secondary rounded-full transition-all duration-1000 ease-out"
+                            className="h-full bg-primary rounded-full transition-all duration-1000 ease-out"
                             style={{ width: `${pct}%` }}
                           />
                         </div>

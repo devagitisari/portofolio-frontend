@@ -42,7 +42,7 @@ export default function ProjectsPage() {
         <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl text-on-background font-extrabold tracking-tighter mb-4 leading-none">
           My <span className="text-primary">Projects</span>
         </h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-primary to-tertiary mx-auto rounded-full mb-6"></div>
+        <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6"></div>
         <p className="font-sans text-body-lg text-on-surface-variant max-w-xl mx-auto leading-relaxed">
           An exploration of academic, professional, and personal engineering achievements, showcasing my full-stack capabilities.
         </p>
@@ -99,7 +99,7 @@ export default function ProjectsPage() {
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 select-none"
                   />
-                  <div className="absolute top-4 left-4 z-10 bg-surface-container-lowest/80 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-xl font-mono text-[10px] font-semibold text-tertiary uppercase select-none">
+                  <div className="absolute top-4 left-4 z-10 bg-surface-container-lowest/80 backdrop-blur-md border border-white/10 px-3.5 py-1.5 rounded-xl font-mono text-[10px] font-semibold text-primary uppercase select-none">
                     {project.category}
                   </div>
                   {project.featured && (
@@ -114,7 +114,7 @@ export default function ProjectsPage() {
 
                   <div>
                     {(project.startDate || project.endDate) && (
-                      <p className="font-mono text-[10px] uppercase tracking-wider text-tertiary mb-2">
+                      <p className="font-mono text-[10px] uppercase tracking-wider text-primary mb-2">
                         {formatProjectDate(project.startDate) || "Started"} - {formatProjectDate(project.endDate) || "Present"}
                       </p>
                     )}
@@ -130,12 +130,12 @@ export default function ProjectsPage() {
                     {/* Skills Used */}
                     <div className="flex flex-wrap gap-3 mb-6 select-none">
                       {(project.skillNames ?? []).slice(0, 2).map(skill => (
-                        <span key={skill} className="bg-tertiary/10 border border-tertiary/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-tertiary">
+                        <span key={skill} className="bg-primary/10 border border-primary/30 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-primary">
                           {skill}
                         </span>
                       ))}
                       {(project.skillNames ?? []).length > 2 && (
-                        <span className="bg-tertiary/10 border border-tertiary/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-tertiary">
+                        <span className="bg-primary/10 border border-primary/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-primary">
                           +{(project.skillNames ?? []).length - 2}
                         </span>
                       )}

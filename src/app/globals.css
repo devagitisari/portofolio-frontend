@@ -4,9 +4,9 @@
 
 @theme {
   /* Dark Mode Color Palette (Default) */
-  --color-surface-bright: #3a3939;
+  --color-surface-bright: #2b2c33;
   --color-on-secondary: #520070;
-  --color-outline-variant: #3c494e;
+  --color-outline-variant: #34353c;
   --color-tertiary-fixed: #00fdee;
   --color-on-secondary-fixed-variant: #6e208c;
   --color-inverse-primary: #ff4fb3;
@@ -15,10 +15,10 @@
   --color-on-error-container: #ffdad6;
   --color-on-primary-fixed-variant: #004e60;
   --color-secondary-fixed: #f9d8ff;
-  --color-surface-variant: #353534;
-  --color-surface-container: #201f1f;
+  --color-surface-variant: #202127;
+  --color-surface-container: #16171c;
   --color-on-tertiary-fixed: #00201d;
-  --color-surface-container-highest: #353534;
+  --color-surface-container-highest: #23242b;
   --color-on-secondary-container: #e498ff;
   --color-tertiary-fixed-dim: #00ded1;
   --color-outline: #859399;
@@ -29,27 +29,27 @@
   --color-on-tertiary: #003733;
   --color-tertiary: #00f7e8;
   --color-surface-tint: #ff69b4;
-  --color-surface-container-low: #1c1b1b;
-  --color-on-background: #e5e2e1;
+  --color-surface-container-low: #121317;
+  --color-on-background: #f4f4f5;
   --color-secondary: #ffffff;
   --color-on-primary-fixed: #001f28;
-  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-high: #1c1d23;
   --color-on-tertiary-fixed-variant: #00504b;
-  --color-surface-container-lowest: #0e0e0e;
-  --color-inverse-surface: #e5e2e1;
+  --color-surface-container-lowest: #0c0d10;
+  --color-inverse-surface: #f4f4f5;
   --color-error-container: #93000a;
-  --color-surface-dim: #131313;
+  --color-surface-dim: #0a0b0e;
   --color-primary-container: #ff1493;
-  --color-on-surface: #e5e2e1;
+  --color-on-surface: #f4f4f5;
   --color-tertiary-container: #00d8cb;
   --color-on-error: #690005;
   --color-primary-fixed-dim: #ff8ac7;
-  --color-surface: #131313;
-  --color-on-surface-variant: #bbc9cf;
+  --color-surface: #0e0f13;
+  --color-on-surface-variant: #a3a3ad;
   --color-on-secondary-fixed: #320046;
   --color-on-tertiary-container: #005953;
   --color-secondary-fixed-dim: #edb1ff;
-  --color-background: #131313;
+  --color-background: #08090b;
   --color-on-primary: #003543;
 
   /* Accent Adapters for Light & Dark Mode */
@@ -85,19 +85,20 @@
 
 :root,
 [data-theme="dark"] {
-  --color-surface-bright: #2a2a2a;
-  --color-surface-variant: #242424;
-  --color-surface-container: #141414;
-  --color-surface-container-highest: #242424;
-  --color-surface-container-low: #101010;
-  --color-surface-container-high: #1c1c1c;
-  --color-surface-container-lowest: #050505;
-  --color-surface-dim: #080808;
-  --color-surface: #0b0b0b;
-  --color-background: #050505;
-  --color-on-background: #f6f3f5;
-  --color-on-surface: #f6f3f5;
-  --color-on-surface-variant: #cfc6cc;
+  --color-surface-bright: #2b2c33;
+  --color-surface-variant: #202127;
+  --color-surface-container: #16171c;
+  --color-surface-container-highest: #23242b;
+  --color-surface-container-low: #121317;
+  --color-surface-container-high: #1c1d23;
+  --color-surface-container-lowest: #0c0d10;
+  --color-surface-dim: #0a0b0e;
+  --color-surface: #0e0f13;
+  --color-background: #08090b;
+  --color-on-background: #f4f4f5;
+  --color-on-surface: #f4f4f5;
+  --color-on-surface-variant: #a3a3ad;
+  --color-outline-variant: #34353c;
   --color-primary: #ff69b4;
   --color-secondary: #ffffff;
   --color-tertiary: #00f7e8;
@@ -213,10 +214,10 @@ body {
 
 /* Glassmorphism Card Style */
 .glass-card {
-  background: rgba(18, 18, 18, 0.6);
+  background: rgba(22, 23, 28, 0.55);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 [data-theme="light"] .glass-card {
@@ -224,6 +225,24 @@ body {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Section rhythm — setiap section punya nada sendiri supaya halaman
+   terbaca sebagai beberapa band, bukan satu dinding gelap panjang. */
+.section-band {
+  background-color: var(--color-background);
+}
+
+.section-band-alt {
+  background-color: var(--color-surface-container-low);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .section-band-alt {
+  background-color: var(--color-surface-container-low);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 /* Neon Glow Shadow Effects */
@@ -311,14 +330,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-tertiary);
+  background: var(--color-primary);
   border-radius: 999px;
 }
 
 /* Text Selection Style */
 ::selection {
-  background: var(--color-tertiary);
-  color: var(--color-on-tertiary);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
 }
 
 /* Custom Utility Classes for Proper Spacing */

@@ -99,7 +99,7 @@ export default async function CertificateDetailPage({ params }: { params: Promis
                     {cert.credential_url && (
                         <div className="glass-card p-8 rounded-[2rem] border border-white/10 space-y-4">
                             <h3 className="font-sans text-headline-sm font-bold text-primary">Verification</h3>
-                            <a href={cert.credential_url || cert.credentialUrl || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl border border-white/10 bg-tertiary/10 px-5 py-4 text-tertiary hover:bg-tertiary/20 transition-all">
+                            <a href={cert.credential_url || cert.credentialUrl || "#"} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl border border-white/10 bg-primary/10 px-5 py-4 text-primary hover:bg-primary/20 transition-all">
                                 <ExternalLink size={18} />
                                 <span>Verify Credential</span>
                             </a>
