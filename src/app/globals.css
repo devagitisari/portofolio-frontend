@@ -7,7 +7,7 @@
   --color-surface-bright: #2b2c33;
   --color-on-secondary: #520070;
   --color-outline-variant: #34353c;
-  --color-tertiary-fixed: #00fdee;
+  --color-tertiary-fixed: #e9d5ff;
   --color-on-secondary-fixed-variant: #6e208c;
   --color-inverse-primary: #ff4fb3;
   --color-secondary-container: #6e208c;
@@ -20,14 +20,14 @@
   --color-on-tertiary-fixed: #00201d;
   --color-surface-container-highest: #23242b;
   --color-on-secondary-container: #e498ff;
-  --color-tertiary-fixed-dim: #00ded1;
+  --color-tertiary-fixed-dim: #d8b4fe;
   --color-outline: #859399;
   --color-primary: #ff69b4;
   --color-primary-fixed: #ffd6ec;
   --color-error: #ffb4ab;
   --color-on-primary-container: #00566a;
   --color-on-tertiary: #003733;
-  --color-tertiary: #00f7e8;
+  --color-tertiary: #a855f7;
   --color-surface-tint: #ff69b4;
   --color-surface-container-low: #121317;
   --color-on-background: #f4f4f5;
@@ -41,13 +41,13 @@
   --color-surface-dim: #0a0b0e;
   --color-primary-container: #ff1493;
   --color-on-surface: #f4f4f5;
-  --color-tertiary-container: #00d8cb;
+  --color-tertiary-container: #c026d3;
   --color-on-error: #690005;
   --color-primary-fixed-dim: #ff8ac7;
   --color-surface: #0e0f13;
   --color-on-surface-variant: #a3a3ad;
   --color-on-secondary-fixed: #320046;
-  --color-on-tertiary-container: #005953;
+  --color-on-tertiary-container: #fff0ff;
   --color-secondary-fixed-dim: #edb1ff;
   --color-background: #08090b;
   --color-on-primary: #003543;
@@ -101,28 +101,35 @@
   --color-outline-variant: #34353c;
   --color-primary: #ff69b4;
   --color-secondary: #ffffff;
-  --color-tertiary: #00f7e8;
+  --color-tertiary: #a855f7;
   --color-primary-fixed: #ffd6ec;
   --color-primary-container: #ff1493;
   --color-primary-fixed-dim: #ff8ac7;
   --color-on-primary: #2a0015;
   --color-on-primary-fixed: #2a0015;
-  --color-tertiary-container: #00d8cb;
+  --color-tertiary-container: #7c3aed;
+  --color-on-tertiary: #f5f3ff;
   --color-surface-tint: #ff69b4;
 
+  /* Secondary accent: violet — pasangan pink di color wheel.
+     Dipakai HANYA sebagai aksen selingan, bukan warna dominan. */
+  --color-accent-violet: #a855f7;
+  --color-accent-violet-soft: #c084fc;
+  --color-accent-violet-deep: #7c3aed;
+
   /* Accent Adapters Dark Theme Values */
-  --accent-blue-text: #a5e7ff;
-  --accent-blue-bg: rgba(0, 210, 255, 0.15);
-  --accent-purple-text: #edb1ff;
-  --accent-purple-bg: rgba(110, 32, 140, 0.2);
-  --accent-teal-text: #00f7e8;
-  --accent-teal-bg: rgba(0, 216, 203, 0.1);
-  --accent-blue-solid: #00d2ff;
-  --accent-blue-solid-text: #003543;
-  --accent-purple-solid: #ff1493;
+  --accent-blue-text: #d8c8ff;
+  --accent-blue-bg: rgba(168, 85, 247, 0.15);
+  --accent-purple-text: #a855f7;
+  --accent-purple-bg: rgba(124, 58, 237, 0.18);
+  --accent-teal-text: #c084fc;
+  --accent-teal-bg: rgba(124, 58, 237, 0.1);
+  --accent-blue-solid: #a855f7;
+  --accent-blue-solid-text: #1a0a2e;
+  --accent-purple-solid: #7c3aed;
   --accent-purple-solid-text: #ffffff;
-  --accent-teal-solid: #00f7e8;
-  --accent-teal-solid-text: #00201d;
+  --accent-teal-solid: #c084fc;
+  --accent-teal-solid-text: #2a0a4a;
 }
 
 [data-theme="light"] {
@@ -141,7 +148,10 @@
   --color-on-surface-variant: #6d5261;
   --color-primary: #d91e63;
   --color-secondary: #8a1f63;
-  --color-tertiary: #00796b;
+  --color-tertiary: #9333ea;
+  --color-accent-violet: #9333ea;
+  --color-accent-violet-soft: #a855f7;
+  --color-accent-violet-deep: #6d28d9;
   --color-primary-fixed: #001f28;
   --color-primary-container: #ffd6ec;
   --color-primary-fixed-dim: #ff8ac7;
@@ -151,17 +161,17 @@
   --color-surface-tint: #d91e63;
 
   /* Accent Adapters Light Theme Values */
-  --accent-blue-text: #005bc5;
-  --accent-blue-bg: rgba(0, 91, 197, 0.08);
-  --accent-purple-text: #8a1f63;
-  --accent-purple-bg: rgba(138, 31, 99, 0.08);
-  --accent-teal-text: #006a63;
-  --accent-teal-bg: rgba(0, 106, 99, 0.08);
-  --accent-blue-solid: #005bc5;
+  --accent-blue-text: #6d28d9;
+  --accent-blue-bg: rgba(109, 40, 217, 0.08);
+  --accent-purple-text: #7c3aed;
+  --accent-purple-bg: rgba(124, 58, 237, 0.08);
+  --accent-teal-text: #9333ea;
+  --accent-teal-bg: rgba(147, 51, 234, 0.08);
+  --accent-blue-solid: #7c3aed;
   --accent-blue-solid-text: #ffffff;
-  --accent-purple-solid: #8a1f63;
+  --accent-purple-solid: #d91e63;
   --accent-purple-solid-text: #ffffff;
-  --accent-teal-solid: #006a63;
+  --accent-teal-solid: #9333ea;
   --accent-teal-solid-text: #ffffff;
 }
 
@@ -254,44 +264,45 @@ body {
   box-shadow: 0 0 30px rgba(255, 105, 180, 0.28);
 }
 
-/* Gradient Text Classes - Pink, White, Green, Teal */
+/* Gradient Text Classes — pink → violet (dua warna yang saling melengkapi).
+   Semua varian kini pakai dua warna yang sama biar halaman koheren. */
 .text-gradient-primary {
-  background: linear-gradient(135deg, #ff1493 0%, #fff 35%, #00d4aa 70%, #00f7e8 100%);
+  background: linear-gradient(135deg, #ff69b4 0%, #d16ba5 45%, #a855f7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-soft {
-  background: linear-gradient(135deg, #ff69b4 0%, #ffffff 40%, #20d9a3 70%, #00d4aa 100%);
+  background: linear-gradient(135deg, #ff8ac7 0%, #c58fd9 45%, #c084fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .text-gradient-vibrant {
-  background: linear-gradient(120deg, #ff1493 0%, #fff 25%, #00ff7f 60%, #00d4d4 100%);
+  background: linear-gradient(120deg, #ff1493 0%, #c084fc 55%, #7c3aed 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 [data-theme="light"] .text-gradient-primary {
-  background: linear-gradient(135deg, #d91e63 0%, #321427 35%, #008b7f 70%, #0097a7 100%);
+  background: linear-gradient(135deg, #d91e63 0%, #9d4ea3 45%, #7c3aed 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 [data-theme="light"] .text-gradient-soft {
-  background: linear-gradient(135deg, #c2185b 0%, #4a2438 40%, #00796b 70%, #00838f 100%);
+  background: linear-gradient(135deg, #e91e63 0%, #a358a8 45%, #9333ea 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 [data-theme="light"] .text-gradient-vibrant {
-  background: linear-gradient(120deg, #e91e63 0%, #321427 25%, #00a86b 60%, #0097a7 100%);
+  background: linear-gradient(120deg, #d91e63 0%, #9333ea 55%, #6d28d9 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
